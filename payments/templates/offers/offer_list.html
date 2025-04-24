@@ -1,0 +1,21 @@
+{% extends 'offers/offers_base.html' %}
+
+{% load crispy_forms_tags django_tables2 static %}
+
+{% block title %}Offers{% endblock title %}
+
+{% block page_title %}Offers{% endblock %}
+
+{% block content %}
+    <div class="bottom-buffer">
+        <a class="btn btn-primary" href="{% url "verify_in_store_offer_create" %}">
+            New Verify-in-Store offer
+        </a>
+        <a class="btn btn-primary" href="{% url "free_subscription_offer_create" %}">
+            New Free-Subscription offer
+        </a>
+        <a class="btn btn-primary" href="{% url "offer_verify" %}">Verify voucher</a>
+    </div>
+    {% render_table table %}
+{% endblock %}
+

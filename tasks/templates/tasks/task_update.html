@@ -1,0 +1,76 @@
+{% extends 'tasks/tasks_base.html' %}
+
+{% load activity_tags crispy_forms_tags django_tables2 link_tags static %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block title %}Task: {{ task }}{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=task.pk url_name='task_update' pk=task.pk %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="card border-light">
+        <div class="card-body">
+            <div id="task-update-title"><strong>Task: </strong>{{ task }}</div>
+        </div>
+    </div>
+    <div class="card border-light">
+        <div class="card-body">
+            {% include 'tasks/includes/task.html' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card border-light">
+                <div class="card-header">
+                    <div class="card-title">Task Updates</div>
+                </div>
+                <ol class="card-body action-stream">
+                    {% activity_stream 'target' task %}
+                    {% if stream %}
+                        {% for action in stream reversed %}
+                            {% display_action action %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="stream-action">
+                            No activity yet
+                        </div>
+                    {% endif %}
+                </ol>
+            </div>
+            <div class="card border-light">
+                <div class="card-header">
+                    <div class="card-title">Reply</div>
+                </div>
+                <div class="card-body">
+                    {% crispy sms_form %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card border-light">
+                <div class="card-header">
+                    <div class="card-title">Edit task</div>
+                </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <a href='{% url "task_list" %}' class="btn btn-info btn-lg">Back to tasks</a>
+
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static "js/sms-character-counter.js" %}?version=6"></script>
+    <script src="{% static "js/task-reply-form.js" %}"></script>
+    <script src="{% static "js/tasks.js" %}?version=9"></script>
+{% endblock %}

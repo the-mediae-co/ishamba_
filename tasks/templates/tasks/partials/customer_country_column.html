@@ -1,0 +1,16 @@
+{% load static %}
+{% with customer=record.customer %}
+{% if customer.border0 %}
+    {% if customer.border0.name == 'Uganda' %}
+        <img src="{% static 'images/ishamba/Flag_of_Uganda.svg' %}" alt="Uganda Flag"
+             class="img-fluid img-thumbnail" width="50"><br>
+    {% endif %}
+    {% if customer.border0.name == 'Zambia' %}
+        <img src="{% static 'images/ishamba/Flag_of_Zambia.svg' %}" alt="Zambia Flag"
+             class="img-fluid img-thumbnail" width="50"><br>
+    {% endif %}
+    <small>{{ customer.border0 }}</small>
+{% else %}
+—
+{% endif %}
+{% endwith %}

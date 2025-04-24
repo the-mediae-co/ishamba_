@@ -1,0 +1,38 @@
+{% extends 'offers/offer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{% if offer.pk %}Edit{% else %}Add{% endif %} Offer{% endblock title %}
+
+{% block breadcrumb %}
+    {% comment %}
+        NB no {{ block.super }} here, as we don't have a pk, and that would break things
+    {% endcomment %}
+    {% if offer.pk %}
+        {{ block.super }}
+        {% breadcrumb_entry text='Edit' url_name='offer_update' pk=offer.pk %}
+    {% else %}
+        {% breadcrumb_entry text='Offers' url_name='offer_list' %}
+        {% breadcrumb_entry text='Add' url_name=url_name %}
+    {% endif %}
+{% endblock %}
+
+{% block submenu %}
+    {% comment %}
+        As we may be creating, we don't always want the submenu of links, either, so
+        include it explicitly with {{ block.super }}.
+    {% endcomment %}
+    {% if offer.pk %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}}
+
+
+{% block content %}
+    <h2>{% if offer.pk %}Editing{% else %}New{% endif %} offer</h2>
+    <div class="card">
+        <div class="card-body">
+            {% crispy form %}
+        </div>
+    </div>
+{% endblock %}

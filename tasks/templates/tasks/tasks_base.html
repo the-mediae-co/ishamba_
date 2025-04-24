@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load link_tags %}
+
+{% block section_header %}
+    <h1>Tasks</h1>
+{% endblock %}
+
+{% block nav %}
+    {% with app_name='tasks' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Tasks' url_name='task_list' %}
+{% endblock %}
+
+{% block content %}
+    <h2>{% block page_title %}{% endblock %}</h2>
+    {% block page_content %}{% endblock %}
+{% endblock %}

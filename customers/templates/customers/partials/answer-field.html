@@ -1,0 +1,6 @@
+{% load crispy_forms_field %}
+<div id="div_{{ field.auto_id }}">
+    <div class="controls {{ field_class }}">
+        {% crispy_field field %}
+    </div>
+</div>

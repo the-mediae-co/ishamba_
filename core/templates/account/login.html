@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags link_tags static %}
+
+{% block title %}Login{% endblock %}
+
+{% block nav %}
+    {% with app_name='login' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Login' url_name='login' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1 class="page-header">Log in</h1>
+        <div class="card">
+            <div class="card-body">
+                <form method='POST'>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type='submit' class='btn btn-primary float-right' value='Log in'>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

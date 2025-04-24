@@ -1,0 +1,30 @@
+{% extends 'exports/exports_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load django_tables2 %}
+{% load static %}
+
+{% block title %}Exports{% endblock %}
+
+{% block page_title %}Exports{% endblock %}
+
+{% block page_content %}
+    <div class="bottom-buffer">
+        <a class="btn btn-primary" href="{% url 'exports:customers' %}">
+            Export customers
+        </a>
+        <a class="btn btn-primary" href="{% url 'exports:incoming-messages' %}">
+            Export incoming messages
+        </a>
+        <a class="btn btn-primary" href="{% url 'exports:maps_list' %}">
+            Maps
+        </a>
+    </div>
+
+    {# Exports table #}
+    <div class="card">
+        <div class="card-content">
+            {% render_table table %}
+        </div>
+    </div>
+{% endblock %}

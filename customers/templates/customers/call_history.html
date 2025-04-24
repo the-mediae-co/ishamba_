@@ -1,0 +1,17 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{{ customer }} Call History{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Call history' url_name='customers:customer_call_history' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Call history{% endblock %}
+
+{% block page_content %}
+    {% render_table table %}
+{% endblock %}
+

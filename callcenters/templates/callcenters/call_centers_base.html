@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load link_tags %}
+
+{% block title %}My Call Centres{% endblock title %}
+
+{% block nav %}
+    {% with app_name='callcenters' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Call Centers' url_name='call_centers_index' %}
+{% endblock %}
+
+{% block section_header %}
+    <h1>Call Centres</h1>
+{% endblock %}

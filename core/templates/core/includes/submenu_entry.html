@@ -1,0 +1,10 @@
+<div class="card sidenav-item shadow-sm">
+    <div class="card-header">
+        <div class="card-title">
+            <a class="sidenav-link{% if request.get_full_path == the_url %} is-active{% endif %}" href="{{ the_url }}">
+                <i class="fa-solid fa-{{ icon }} fa-beat-fade sidenav-icon"></i>
+                <span>{{ text }}</span>
+            </a>
+        </div>
+    </div>
+</div>

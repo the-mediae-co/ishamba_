@@ -1,0 +1,9 @@
+OutgoingSMS objects attempted: {{ num_messages }}
+
+{% if generic_errors %}{{ generic_errors|length }}{% else %}No{% endif %}generic error{{ errors|pluralize }} (errors that don't have an associated sent sms)
+{% for error in generic_errors %}
+- {{ error }} {% endfor %}
+{% if errors %}{{ errors|length }}{% else %}No{% endif %} error{{ errors|pluralize }}
+{% for error in errors %}
+Error {{ forloop.counter }}
+{{ error }} {% endfor %}

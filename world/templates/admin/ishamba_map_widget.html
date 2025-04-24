@@ -1,0 +1,38 @@
+{% load static %}
+{# Undo aspects of Django's black theme since the leaflet map has white theme #}
+{% block dark-mode-vars %}{% endblock %}
+<style>
+    input {
+        color: black !important;
+    }
+    form .aligned ul {
+        margin-left: unset;
+        padding-left: unset;
+    }
+    .aligned label {
+        color: unset;
+        width: unset;
+    }
+</style>
+
+<div id="map" style="height: 360px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+<script src="https://kit.fontawesome.com/f9e3ea6c7a.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script type='text/javascript' src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
+{{ search_geom|json_script:'search_geom' }}
+{{ enableLeafletEditing|json_script:'enableLeafletEditing' }}
+{{ customer.id|json_script:'customerId' }}
+{{ customerGPS|json_script:'customerGPS' }}
+{{ border2_label|json_script:'customerBorder2Label' }}
+{{ border2_name|json_script:'customerBorder2Name' }}
+{{ border2_geom|json_script:'customerBorder2Geometry' }}
+{{ border2_centroid|json_script:'customerBorder2Centroid' }}
+{{ border3_label|json_script:'customerBorder3Label' }}
+{{ border3_name|json_script:'customerBorder3Name' }}
+{{ border3_geom|json_script:'customerBorder3Geometry' }}
+{{ border3_centroid|json_script:'customerBorder3Centroid' }}
+
+<script type='text/javascript' src="{% static 'js/leaflet-controls.js' %}?version=5"></script>

@@ -1,0 +1,33 @@
+{% extends 'management/management_base.html' %}
+
+{% load crispy_forms_tags link_tags static %}
+
+{% block title %}Bulk SMS Customer Filter{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Bulk SMS customer filter' url_name='core_management_customer_filter' %}
+{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+{% endblock %}
+
+{% block page_title %}Filter customers for bulk SMS{% endblock %}
+
+{% block page_content %}
+    {% crispy form %}
+{% endblock %}
+
+{% block extra_js %}
+    <script id="linkMenusAndMap" type="application/json">false</script>
+    <script id="enableLeafletEditing" type="application/json">true</script>
+    <script id="customerBorder2Label" type="application/json">"Subcounty/District"</script>
+    <script id="customerBorder3Label" type="application/json">"Ward/County"</script>
+    <script type='text/javascript' src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type='text/javascript' src="{% static 'js/customer-form.js' %}?version=5"></script>
+    <script type='text/javascript' src="{% static 'js/filter-form.js' %}?version=9"></script>
+    <script type='text/javascript' src="{% static 'js/leaflet-controls.js' %}?version=5"></script>
+{% endblock %}

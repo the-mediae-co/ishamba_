@@ -1,0 +1,29 @@
+{% load tasks_filters gravatar %}
+
+<li>
+    <div class="action mod-{{ action.verb }}">
+        <div class="chip">
+            {{ action.action_object.email|gravatar }}
+            {{ action.actor }}
+        </div>
+
+        <p class="action-text">changed the {{ action.data.field }} from</p>
+
+        <span class="badge badge-{{ action.data.initial|action_to_string:action.data.field|slugify }}">
+            {{ action.data.initial|action_to_string:action.data.field }}
+        </span>
+
+        <p class="action-text">to</p>
+
+        <span class="badge badge-{{ action.data.final|action_to_string:action.data.field|slugify }}">
+            {{ action.data.final|action_to_string:action.data.field }}
+        </span>
+
+        <time class="action-time"
+              datetime="{{ action.timestamp|date:"Y-m-d" }}">
+            <span class="action-time-value">
+                {{ action.timestamp|date:"h:i a D F j, Y" }}
+            </span>
+        </time>
+    </div>
+</li>

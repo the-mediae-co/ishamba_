@@ -1,0 +1,37 @@
+{% extends 'management/management_base.html' %}
+
+{% load crispy_forms_tags django_tables2 static %}
+
+{% block title %}Management Charts{% endblock title %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/3.14.3/billboard.min.css">
+{% endblock %}
+
+{% block page_title %}{{ view.scope|title }} Rates{% endblock %}
+
+{% block page_content %}
+    {% crispy form %}
+    <div id="chart"></div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/3.14.3/billboard.js"></script>
+
+    <script>
+        var chartdata = {{ chartdata|safe }};
+        var chart = bb.generate({
+            bindto: '#chart',
+            data: {
+                groups: chartdata['groups'],
+                type: 'bar',
+                order: false,
+                columns: chartdata['columns'],
+                colors: chartdata['colors'],
+            },
+        });
+    </script>
+{% endblock %}

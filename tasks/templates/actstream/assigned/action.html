@@ -1,0 +1,31 @@
+{% load gravatar %}
+
+<li>
+    <div class="action mod-{{ action.verb }}">
+        <div class="chip">
+            {{ action.action_object.email|gravatar }}
+            {{ action.actor }}
+        </div>
+
+        <p class="action-text mod-margin-after">
+            {{ action.verb }}
+            {% if action.actor == action.action_object %}
+                themselves
+            {% endif %}
+        </p>
+
+        {% if action.actor != action.action_object %}
+            <div class="chip">
+                {{ action.action_object.email|gravatar }}
+                {{ action.action_object }}
+            </div>
+        {% endif %}
+
+        <time class="action-time"
+              datetime="{{ action.timestamp|date:"Y-m-d" }}">
+            <span class="action-time-value">
+                {{ action.timestamp|date:"h:i a D F j, Y" }}
+            </span>
+        </time>
+    </div>
+</li>

@@ -1,0 +1,58 @@
+{% extends 'offers/offers_base.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}Offer {{ offer }}{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=offer url_name='offer_detail' pk=offer.pk %}
+{% endblock %}
+
+{% block page_title %}Offer: {{ offer }}{% if not offer.is_current %} (expired){% endif %}{% endblock %}
+
+{% block content %}
+    <h2>Offer Detial</h2>
+    <dl class="dl-horizontal mod-offer-detail">
+        <dt>Expiry date:</dt>
+        <dd>{{ offer.expiry_date }}{% if not offer.is_current %} (expired){% endif %}</dd>
+
+        {% if offer.specific.offer_type == 2 %}
+            <dt>Message:</dt>
+            <dd>{{ offer.specific.message }}</dd>
+
+            <dt>Confirmation message:</dt>
+            <dd>{{ offer.specific.confirmation_message }}</dd>
+        {% endif %}
+
+        {% if offer.specific.offer_type == 1 %}
+            <dt>Value:</dt>
+            <dd>{{ offer.specific.months }} months</dd>
+        {% endif %}
+        <dt>Vouchers generated:</dt>
+        <dd>{{ offer.vouchers.count }}</dd>
+        <dt>Number of vouchers redeemed:</dt>
+        <dd>{{ offer.redeemed_vouchers }} voucher{{ offer.redeemed_vouchers|pluralize }}</dd>
+        <dt>Take-up:</dt>
+        <dd>{{ offer.take_up }}</dd>
+    </dl>
+
+    <p>
+        <a class="btn btn-primary" href="{% url 'offer_update' pk=offer.pk %}">Edit</a>
+        <a class="btn btn-primary" href="{% url 'offer_detail' pk=offer.pk %}?export=true">
+            Download CSV
+        </a>
+
+        {% if offer.specific.offer_type == 2 %}
+            <a class="btn btn-primary" href="{% url 'offer_filter_customers' pk=offer.pk %}">
+                Send vouchers
+            </a>
+        {% endif %}
+
+        {% if form %}
+            <h4>Generate more vouchers</h4>
+            {% crispy form %}
+        {% endif %}
+    </p>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% load gravatar add_get %}
+
+{% for assignee in record.assignees.all %}
+        <small><a href="{% add_get assignees=assignee.pk %}">
+            {% if forloop.last %}
+                {{ assignee }}
+            {% else %}
+                {{ assignee }},
+            {% endif %}
+        </a></small>
+{% empty %}
+—
+{% endfor %}

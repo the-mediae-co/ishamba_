@@ -1,0 +1,8 @@
+{% load gravatar %}
+
+<div class="chip">
+    <span class="assignee-chip">
+        {{ record.created_by.email|gravatar }}
+        {{ record.created_by }}
+    </span>
+</div>

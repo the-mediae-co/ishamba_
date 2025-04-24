@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load link_tags %}
+
+{% block nav %}
+    {% with app_name='exports' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Exports' url_name='exports:list' %}
+{% endblock %}
+
+{% block content %}
+    <div class='left'>
+        {% block submenu %}{% endblock %}
+    </div>
+    <div class='right'>
+        <h2>{% block page_title %}{% endblock %}</h2>
+        {% block page_content %}{% endblock %}
+    </div>
+{% endblock %}

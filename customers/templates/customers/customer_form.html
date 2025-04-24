@@ -1,0 +1,66 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}
+    {% if customer.pk %}
+        Edit {{ customer }} Details
+    {% else %}
+        Add New Customer
+    {% endif %}
+{% endblock title %}
+
+{% block breadcrumb %}
+    {% comment %}
+    NB no {{ block.super }} here, as we don't have a pk, and that would break things
+    {% endcomment %}
+    {% if customer.pk %}
+        {{ block.super }}
+        {% breadcrumb_entry text='Edit' url_name='customers:customer_update' pk=customer.pk %}
+    {% else %}
+        {% breadcrumb_entry text='Customers' url_name='customers:customer_list' %}
+        {% breadcrumb_entry text='Add' url_name='customers:customer_create' %}
+    {% endif %}
+{% endblock %}
+
+{% block submenu %}
+    {% comment %}
+        As we may be creating, we don't always want the submenu of links, either,
+        so include it explicitly with {{ block.super }}.
+    {% endcomment %}
+    {% if customer.pk %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}}
+
+{% block page_title %}Customer{% if object %} {{ object }}{% endif %}{% endblock %}
+
+{% block page_content %}
+    <form  name="updates_form" id="updates_form" action="." method="post">
+        {% crispy form %}
+
+        <fieldset class="market-subscriptions">
+            <legend>Market subscriptions</legend>
+            {% crispy markets_form markets_form_helper %}
+        </fieldset>
+
+        <fieldset class="questions">
+            <legend>Questions</legend>
+            {% crispy questions_form questions_form_helper %}
+        </fieldset>
+
+        <input type="submit" value="Update" class="btn btn-primary">
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    {# Inherit the leaflet js definitions from customer_detail.html #}
+    {{ block.super }}
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type='text/javascript' src="{% static 'js/vendor/jquery.formset.js' %}?version=2"></script>
+    <script type='text/javascript' src="{% static 'js/filter-form.js' %}?version=9"></script>
+    <script type='text/javascript' src="{% static 'js/customer-form.new.js' %}?version=2"></script>
+    <script type='text/javascript'>
+        const g_csrftoken = '{{ csrf_token }}'
+    </script>
+{% endblock %}

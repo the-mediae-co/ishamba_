@@ -1,0 +1,11 @@
+<div id="modal-content-wrapper">
+    <header id="modal-header">
+        <h1 id="modal-title">{{label}}</h1>
+    </header>
+<input type="file" class="file-input" (change)="onChange($event)" #fileUpload />
+    <div *ngIf="file">
+        <section class="file-info" *ngIf="headers && data">
+            File data:{{file.name}}  {{file.type}} {{file.size}} bytes
+        </section>
+    </div>
+</div>

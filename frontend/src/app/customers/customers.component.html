@@ -1,0 +1,79 @@
+<section class="py-4 overflow-hidden relative max-w-full">
+    <div class="flex flex-col h-[82vh]">
+      <app-customer-filter-panel
+        (filterChangeEvent)="filtersChanged($event)"
+        [query]="customerFilters['q']"
+        [commodity_id]="customerFilters['tips_commodity']"
+        [subscribedToTips]="customerFilters['subscribed_to_tips']"
+      ></app-customer-filter-panel>
+      <app-customer-table [customerFilters]="customerFilters"></app-customer-table>
+      <app-paginator [currentPage]="currentPage" [totalCount]="totalCount" (pageChangeEvent)="changePage($event)"></app-paginator>
+    </div>
+</section>
+   <!-- Main modal -->
+   <div *ngIf="showModal" id="crud-modal" tabindex="-1" class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Create
+                </h3>
+                <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form #messageForm="ngForm" class="p-4 md:p-5">
+                <div class="grid gap-4 mb-4 grid-cols-2">
+
+                    <!-- <div *ngIf="!messageType" class="col-span-2 sm:col-span-1">
+                        <label for="message_type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Message Type</label>
+                        <select [(ngModel)]="newMessageType" id="message_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option *ngFor="let messageTypeChoice of messageTypeChoices" value="{{messageTypeChoice.value}}" selected="">{{messageTypeChoice.label}}</option>
+                        </select>
+                    </div> -->
+                    <div class="col-span-2">
+                        <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Text</label>
+                        <textarea [(ngModel)]="newMessageText" id="text" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write message text here" required></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="eta" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ETA</label>
+                        <input (change)="updateEta($event)" type="datetime-local" id="eta"/>
+                        <span [innerHTML]="errors.eta" *ngIf="errors.eta" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                        </span>
+                    </div>
+                </div>
+                <app-customer-file-uploader (errorEvent)="updateRecipientsError($event)" (newDataEvent)="updateRecipients($event)" [headers]="['id']" [label]="'Customer IDs'"></app-customer-file-uploader>
+
+                <span [innerHTML]="errors.recipients" *ngIf="errors.recipients" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                </span>
+                <button *ngIf="newMessageText && (recipients.length > 0 ) && (errors | keyvalue)?.length == 0" (click)="saveMessage()" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Save
+                </button>
+            </form>
+
+            <div class="flex flex-row items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+
+                <div *ngIf="recipients.length > 0" class="flex grow">
+                    <table class='text-center w-full'>
+                        <tr class='mb-4'>
+                            <th>id</th>
+                        </tr>
+                        <tbody class="bg-grey-light flex flex-col items-center justify-between overflow-y-scroll max-h-20">
+                            <tr *ngFor="let recipient of recipients">
+                                <td>{{ recipient }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="showModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>

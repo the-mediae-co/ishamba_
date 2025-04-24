@@ -1,0 +1,81 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load django_tables2 link_tags static %}
+
+{% block title %}{{ title }} SMS History{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=breadcrumb_text url_name='customers:customer_detail' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}{{ title }} SMS History{% endblock %}
+
+{% block page_content %}
+    {% if add_url %}
+        <a class="btn btn-primary bottom-buffer" href="{{ add_url }}">Send new</a>
+    {% endif %}
+    {% if filter %}
+        <div class="card border-light">
+            <div class="card-header mod-collapsible">
+                <div data-toggle="collapse" data-target="#messageFilterCard">
+                    <span class="card-title">Filter Messages</span>
+                    <i class="fa-solid fa-caret-right rotate-icon float-right"></i>
+                </div>
+            </div>
+            <div id="messageFilterCard" class="collapse">
+                <div class="card-body">
+                    <form id="filter-form" action="" method="get">
+                        {% if filter.form.non_field_errors %}
+                            <ul>
+                            {% for error in filter.form.non_field_errors %}
+                                <li class="form-control is-invalid">{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% for hidden_field in filter.form.hidden_fields %}
+                            {% if hidden_field.errors %}
+                                <ul>
+                                {% for error in hidden_field.errors %}
+                                    <li class="form-control is-invalid text-danger">(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {{ hidden_field }}
+                        {% endfor %}
+
+                        {% for field in filter.form.visible_fields %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" aria-describedby="help_{{ field.id_for_label }}">
+                                    {{ field.label_tag }}
+                                </label>
+
+                                {% if field.errors %}
+                                    <div class="form-group has-error">
+                                      {% for error in field.errors %}
+                                          <label class="control-label" for="inputError">{{ error }}</label>
+                                          {{ field }}
+                                      {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <br />
+                                    <small class="form-text text-muted" id="help_{{ field.id_for_label }}">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary col-6">
+                            Filter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% render_table table %}
+{% endblock %}

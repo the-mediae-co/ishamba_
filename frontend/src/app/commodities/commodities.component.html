@@ -1,0 +1,105 @@
+<!-- component -->
+<section class="py-2 flex flex-col overflow-hidden">
+    <div class="text-center">
+        <h2 class="text-3xl text-gray-950 font-semibold">Commodities</h2>
+    </div>
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto h-[72vh]">
+        <div *ngFor="let commodity of commodities" class="relative group p-8 rounded-xl bg-white border border-gray-200 h-full">
+            <div aria-hidden="true" class="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 opacity-25"></div>
+            <div class="relative z-10">
+                <div class="border border-red-500/10 flex relative *:relative *:size-6 *:m-auto size-12 rounded-lg   before:rounded-[7px] before:absolute before:inset-0 before:border-t before:border-white before:from-red-100 ">
+                  <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" class="pr-4 w-8 h-8">
+                    <path d="m20.991,12.535c-.198-5.261-3.76-5.535-4.491-5.535-1.194,0-2.92.523-4,2.155v-3.155C12.5.289,8.751,0,8,0h-.5c-1.749,0-4.322,1.618-4.491,6.035-1.698.24-3.009,1.702-3.009,3.465,0,2.676,3.018,5.725,3.146,5.854l.354.354.354-.354c.128-.128,3.146-3.177,3.146-5.854,0-1.757-1.301-3.215-2.99-3.463.154-3.685,2.139-5.037,3.49-5.037h.5c.821,0,3.5.36,3.5,5v18h1v-11c0-4.86,3.591-5,4-5,.793,0,3.318.336,3.49,4.537-1.689.247-2.99,1.706-2.99,3.463,0,2.676,3.018,5.725,3.146,5.854l.354.354.354-.354c.128-.128,3.146-3.177,3.146-5.854,0-1.763-1.311-3.226-3.009-3.465Zm-14.991-3.035c0,1.773-1.736,3.912-2.5,4.767-.764-.854-2.5-2.99-2.5-4.767,0-1.378,1.122-2.5,2.5-2.5s2.5,1.122,2.5,2.5Zm14.5,11.267c-.764-.854-2.5-2.99-2.5-4.767,0-1.378,1.122-2.5,2.5-2.5s2.5,1.122,2.5,2.5c0,1.773-1.736,3.912-2.5,4.767Z"/>
+                  </svg>
+                      <span> {{ commodity.name }} </span>
+                </div>
+                <div class="flex gap-3 -mb-8 py-4 border-t border-gray-200 ">
+                    <a (click)="openTipsModal(commodity)" class="group rounded-xl disabled:border *:select-none [&>*:not(.sr-only)]:relative *:disabled:opacity-20 disabled:text-gray-950 disabled:border-gray-200 disabled:bg-gray-100  text-gray-950 bg-gray-100 hover:bg-gray-200/75 active:bg-gray-100  flex gap-1.5 items-center text-sm h-8 px-3.5 justify-center" style="cursor: pointer;">
+                        <span>{{commodity.call_center_tips_count > 0? 'Add Tips': 'Upload Tips'}}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+                          </svg>
+                    </a>
+                    <a [routerLink]="['/commodities', commodity.id]" class="group flex items-center rounded-xl disabled:border *:select-none [&>*:not(.sr-only)]:relative *:disabled:opacity-20 disabled:text-gray-950 disabled:border-gray-200 disabled:bg-gray-100  text-gray-950 bg-gray-100 hover:bg-gray-200/75 active:bg-gray-100  justify-center" style="cursor: pointer;">
+                        <span class="sr-only">View Commodity</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                        </svg>
+                      <span>{{commodity.call_center_tips_count}}</span>
+                    </a>
+                  <a [routerLink]="['/commodities', commodity.id]" [queryParams]="{view: 'seasons'}" class="group flex items-center rounded-xl disabled:border *:select-none [&>*:not(.sr-only)]:relative *:disabled:opacity-20 disabled:text-gray-950 disabled:border-gray-200 disabled:bg-gray-100  text-gray-950 bg-gray-100 hover:bg-gray-200/75 active:bg-gray-100  justify-center" style="cursor: pointer;">
+                        <span class="sr-only">View Seasons</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                      </svg>
+                    </a>
+
+                  <label class="inline-flex items-center cursor-pointer">
+                    <input (change)="toggleTips(commodity)" type="checkbox" [(ngModel)]="commodity.tips_enabled" class="sr-only peer">
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Tips {{commodity.tips_enabled?'Enabled':'Disabled'}}</span>
+                  </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main modal -->
+<div *ngIf="showModal" id="crud-modal" tabindex="-1" class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+  <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow">
+          <!-- Modal header -->
+          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+              <h3 class="text-lg font-semibold text-gray-900">
+                  Upload tips for {{ selected_commodity?.name }}
+              </h3>
+              <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-toggle="crud-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+              </button>
+          </div>
+          <!-- Modal body -->
+          <form #heroForm="ngForm" class="p-4 md:p-5">
+              <div class="grid gap-4 mb-4 grid-cols-2">
+                  <div *ngIf="showCommoditiesDropdown" class="col-span-2 sm:col-span-1">
+                      <label for="commodity" class="block mb-2 text-sm font-medium text-gray-900">Commodity</label>
+                      <select [(ngModel)]="selected_commodity" id="commodity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                          <option *ngFor="let commodity of commodities" value="{{commodity}}" selected="">{{commodity.name}}</option>
+                      </select>
+
+                  </div>
+
+                  <div class="col-span-2 sm:col-span-1">
+                    <label for="language" class="block mb-2 text-sm font-medium text-gray-900">Language</label>
+                    <select [(ngModel)]="selected_language" id="language" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                        <option *ngFor="let language of languages" value="{{language.value}}" selected="">{{language.label}}</option>
+                    </select>
+                  </div>
+              </div>
+              <app-customer-file-uploader (errorEvent)="updateTipsError($event)" (newDataEvent)="updateTips($event)" [headers]="headers"></app-customer-file-uploader>
+              <span [innerHTML]="errors.tips" *ngIf="errors.tips" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                </span>
+              <button *ngIf="!(errors| keyvalue)?.length && selected_commodity && tips.length > 0" (click)="uploadTips()" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  Save
+              </button>
+          </form>
+            <table *ngIf="tips.length > 0" class='table-auto text-left'>
+                <tr class='flex w-full mb-4'>
+                    <th>Delay</th>
+                    <th>Text</th>
+                </tr>
+                <tbody class="bg-grey-light flex flex-col items-center justify-between overflow-y-scroll max-h-20">
+                    <tr *ngFor="let tip of tips" class="mb-4">
+                        <td>{{tip.delay_days}}</td>
+                        <td>{{tip['translations'][0].text}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div *ngIf="showModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>

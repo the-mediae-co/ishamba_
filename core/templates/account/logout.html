@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags link_tags static %}
+
+{% block title %}Logout{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Logout' url_name='logout' %}
+{% endblock %}
+
+{% block content %}
+    <h1>Log out</h1>
+    You've been logged out.
+{% endblock %}
+

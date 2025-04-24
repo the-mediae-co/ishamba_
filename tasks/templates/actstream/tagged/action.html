@@ -1,0 +1,31 @@
+{% load gravatar %}
+
+<li>
+    <div class="action mod-{{ action.verb }}">
+        <div class="chip">
+            {{ action.action_object.email|gravatar }}
+            {{ action.actor }}
+        </div>
+
+        <p class="action-text">
+            {% if action.verb == 'tagged' %}
+                added tag{{ action.data.tags|pluralize }}
+            {% else %}
+                removed tag{{ action.data.tags|pluralize }}
+            {% endif %}
+        </p>
+
+        {% for tag in action.data.tags %}
+            <span class="badge mod-tag">
+                {{ tag }}
+            </span>
+        {% endfor %}
+
+        <time class="action-time"
+              datetime="{{ action.timestamp|date:"Y-m-d" }}">
+            <span class="action-time-value">
+                {{ action.timestamp|date:"h:i a D F j, Y"  }}
+            </span>
+        </time>
+    </div>
+</li>

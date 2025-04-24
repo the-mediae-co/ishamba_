@@ -1,0 +1,22 @@
+{% extends 'customers/customers_base.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %} Confirm Delete of Crop History Item {% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=object.customer.pk url_name='customers:customer_detail' pk=object.customer.pk %}
+    {% breadcrumb_entry text='Crop history' url_name='customers:customer_crop_history_list' pk=object.customer.pk %}
+{% endblock %}
+
+{% block page_title %} Please Confirm. Delete of Crop History Item? {% endblock %}
+
+{% block page_content %}
+    <form action="{%  url 'customers:customer_crop_history_delete' object.pk %}" method="post">{% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}" crop history item from {{ object.customer }} ?</p>
+        <button type="submit" class="btn btn-primary">Yes, Delete</button>
+        <a role="button" class="btn btn-primary"
+           href="{% url 'customers:customer_crop_history_list' object.customer.id %}">Cancel</a>
+    </form>
+{% endblock %}

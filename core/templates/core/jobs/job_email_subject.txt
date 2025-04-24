@@ -1,0 +1,1 @@
+Scheduled Job #{{ job.pk }}: {% if job.completed %}{% if job.was_successful %}OK{% else %}Errors occurred{% endif %}{% else %}Failed to complete{% endif %}

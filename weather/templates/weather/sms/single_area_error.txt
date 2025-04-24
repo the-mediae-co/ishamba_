@@ -1,0 +1,19 @@
+## Weather Area {{ sent_sms.weather_area.pk }} errors:
+{% for error in errors %}
+- {{ error }} {% endfor %}
+
+## Other info
+
+Successful (current and past) recipients of this exact SMS object: {{ sent_sms.get_extant_recipients|length }}
+{% for sms_recipient in sent_sms.get_extant_recipients %}
+- #{{ sms_recipient.recipient.pk }}, {{ sms_recipient.recipient }}{% endfor %}
+
+Outgoing SMS text ({{ sent_sms.text|length }} characters):
+
+> {{ sent_sms.text }}
+
+Subscribed customers in this weather area:
+{% for customer in sent_sms.weather_area.customer_set.subscribed %}
+- #{{ customer.pk }}, {{ customer }}{% endfor %}
+
+------------------------------------------------------------------------------

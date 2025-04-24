@@ -1,0 +1,53 @@
+Django<4.2
+Levenshtein<0.21.0
+Markdown<3.5
+Werkzeug<2.3
+boltons<21.1
+cachetools<5.3
+celery<5.3
+dateparser<1.2
+django-activity-stream<1.4.3  # Version 1.4.2 is required for django 4.1
+django-crispy-forms<1.15
+django-extensions<3.3
+django-import-export<3.0.0  # 3.0.2 is available but makes breaking changes that require some edits on our side
+django-ipware<4.1
+django-model-utils>=2.6,<4.4
+django-phonenumber-field<7.0.0  # 7.0.1 is available but has some breaking changes to investigate
+django-redis<5.3  # Django 4 has built-in support, but this package is required for django-select2
+django-select2<8.1
+django-tables2<2.5  # Version 2.5 is available and supports bootstrap 5
+django-taggit<3.2
+django-tenants<3.5
+djangorestframework<3.15
+djangorestframework-simplejwt<5.3 # A 'drop-in' replacement for djangorestframework-jwt
+fontawesomefree<6.3.0
+fuzzywuzzy<=0.18
+jsonfield<=3.1.0  # Replace with postgresql built-in? This is no longer supported, and other packages are a mess.
+phonenumbers<8.14
+psycopg2-binary>=2.8,<2.10
+pusher<3.4
+pysm<0.4
+python-dateutil<2.9
+python-decouple==3.8
+python-redis-lock<4.1
+requests<2.29
+scikit-learn<1.3
+pandas<1.6
+numpy<1.25
+humanize<4.5
+django-durationwidget<=1.0.5  # Upgrade to django-durationwidget2
+tenant-schemas-celery<2.1
+djangoql<0.18
+django-filter<22.2
+django-ninja==1.3.0
+git+https://github.com/the-mediae-co/heatmap.git#egg=heatmap
+django-s3-storage<0.14
+elasticsearch==7.17.9
+elasticsearch-dsl==7.4.1
+sentry-sdk<2.0.0
+uwsgi<2.1
+uwsgitop<0.12
+wheel<0.39.0
+xlsxwriter<3.2.0
+langchain-aws==0.2.10
+langchain==0.3.14

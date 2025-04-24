@@ -1,0 +1,15 @@
+{% extends "tables/tables.html" %}
+
+{% block table.thead %}
+    <thead>
+        <tr>
+            {% for column in table.columns %}
+                {% if column.name == 'bulk' %}
+                <th {{ column.attrs.th.as_html }}><input type="checkbox" id="bulk-select-all"></th>
+                {% else %}
+                <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </thead>
+{% endblock %}

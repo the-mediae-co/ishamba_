@@ -1,0 +1,14 @@
+{% load tasks_filters gravatar %}
+
+<li class="{% if action.action_object|get_classname == 'OutgoingSMS' %}outgoing{% endif %}">
+    <div class="avatar">
+        {{ action.actor.email|gravatar }}
+    </div>
+    <div class="message">
+        <p>{{ action.action_object.text }}</p>
+        <time class="message-action-date"
+              datetime="{{ action.timestamp|date:"Y-m-d" }}" title="{{ action.timestamp|date:"h:i a D F j, Y" }}">
+            {{ action.actor }} • {{ action.timesince }}
+        </time>
+    </div>
+</li>

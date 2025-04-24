@@ -1,0 +1,8 @@
+Subscription OutgoingSMS objects attempted: {{ snsss|length }}
+
+{% if errors %}{{ errors|length }}{% else %}No{% endif %} error{{ errors|pluralize }}
+
+{% for error in errors %}
+	Error {{ forloop.counter }}
+	{{ error }}
+{% endfor %}

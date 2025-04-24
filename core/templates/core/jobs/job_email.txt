@@ -1,0 +1,27 @@
+Job #{{ job.pk|stringformat:"06d" }}: {{ job.task }}
+==================
+
+Status: {% if job.completed %}{% if job.was_successful %}OK{% else %}ERRORED{% endif %}{% else %}INCOMPLETE{% endif %}.
+
+==================
+
+Details
+-------
+
+Started: {{ job.date_started|date:"" }}
+Ended: {{ job.date_completed|date:"" }}
+Duration: {{ job.duration }}
+
+Script completed: {{ job.completed|yesno:"Yes,No" }}
+Ran successfully: {{ job.was_successful|yesno:"Yes,No" }}
+
+==================
+
+Output
+------
+
+{{ job.report|safe }}
+==================
+
+-- iShamba
+

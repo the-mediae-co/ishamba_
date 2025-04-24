@@ -1,0 +1,34 @@
+<div class='row'>
+    <div class='col-md-4'>
+        <strong>Customer: </strong><a href="{% url 'customers:customer_detail' task.customer.pk %}">{{ task.customer }}</a>
+    </div>
+    <div class='col-md-3 col-md-offset-1'>
+        <strong>Status: </strong>{{ task.get_status_display }}
+    </div>
+    <div class='col-md-4'>
+        <strong>Created on: </strong>{{ task.created }}
+    </div>
+</div>
+<div class='row'>
+    <div class='col'>
+        {% if not task.customer.border3 %}
+            <p class='text-danger'>
+                {% if not task.customer.border1 %}
+                    Customer Location: UNKNOWN {{ borderlevel3_name }}, {{ borderlevel2_name }} and {{ borderlevel1_name }}. Please ask the Customer.
+                {% else %}
+                    Customer Location: UNKNOWN {{ borderlevel3_name }} and {{ borderlevel2_name }} in {{ task.customer.border1.name }} County. Please ask the Customer.
+                {% endif %}
+            </p>
+        {% else %}
+            Customer Location: {{ task.customer.border3.name }} Ward in {{ task.customer.border1.name }} County
+        {% endif %}
+    </div>
+</div>
+<div class='row'>
+    <div class='col'>
+        <form action='{% url "cannot_contact_customer" task.id %}' method='POST'>
+            {% csrf_token %}
+            <input type='submit' value='Cannot contact customer' class = 'btn btn-danger' />
+        </form>
+    </div>
+</div>

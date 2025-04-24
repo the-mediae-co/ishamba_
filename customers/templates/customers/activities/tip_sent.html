@@ -1,0 +1,14 @@
+{% with tip=action_object.tip %}
+<p title="{{ tip.text }}">
+    <i class="fa-solid fa-graduation-cap sidenav-icon"></i> Recieved
+    <strong>{{ tip.series }} tip</strong>.
+
+    <a data-toggle="collapse"
+       href="#tip-{{ action_object.id }}"
+       aria-expanded="false"
+       aria-controls="tip-{{ action_object.id }}">Show tip</a>
+</p>
+<div id="tip-{{ action_object.id }}" class="collapse text-info">
+    <small>{{ tip.text }}</small>
+</div>
+{% endwith %}

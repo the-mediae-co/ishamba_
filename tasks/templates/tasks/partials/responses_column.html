@@ -1,0 +1,7 @@
+{% for response in record.outgoing_messages.all %}
+    {% if forloop.last %}
+        {{response.text}}
+    {% else %}
+        {{response.text}}<br>
+    {% endif %}
+{% endfor %}

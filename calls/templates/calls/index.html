@@ -1,0 +1,114 @@
+{% extends 'calls/calls_base.html' %}
+
+{% load crispy_forms_tags static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/calls.css" %}" />
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+
+    <div ng-app='CallCenterApp'>
+        <div ng-controller='CallCenterController'>
+            <div class="row">
+                <div class="col-md-9">
+                    {% comment %}These divs are populated by the call queue data{% endcomment %}
+                    <div>
+                        <div ng-view></div>
+                    </div>
+                    <audio id="new-call-sound">
+                        <source src="{% static 'calls/audio/beep2.mp3' %}"></source>
+                    </audio>
+                </div>
+
+                <div class="col-md-3">
+                    <div ng-controller='MembersController'>
+                        <h3 class="text-center">Call centre operators</h3>
+                        {% verbatim %}
+                        <ul class="list-group">
+                            <li ng-repeat='member in members'class="list-group-item">
+                                {{ member.info.username }} ({{ member.info.phone }})
+                            </li>
+                        </ul>
+                        {% endverbatim %}
+                    </div> <!-- ng-controller='MembersController' -->
+                </div>
+            </div>
+        </div> <!-- ng-app='CallCenterApp' -->
+    </div> <!-- ng-controller='CallCenterController' -->
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type='text/javascript' src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script type='text/javascript' id='leaflet_control_geocoder_script' src='https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js'></script>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/angular.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/angular-resource.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/angular-route.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/pusher.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/angular-timer.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/moment.js' %}?version=2"></script>
+    <script type='text/javascript' src="{% static 'calls/vendor/humanize-duration.js' %}?version=2"></script>
+    <script type='text/javascript' src="{% static 'calls/call_centre_services.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/call_center_controller.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/call_centre_directives.js' %}?version=4"></script>
+    <script type='text/javascript' src="{% static 'calls/members_controller.js' %}"></script>
+    <script type='text/javascript' src="{% static 'calls/call_queue_controller.js' %}?version=3"></script>
+    <script type='text/javascript' src="{% static 'calls/in_call_controller.js' %}?version=7"></script>
+    <script type='text/javascript' src="{% static 'calls/call_center_app.js' %}?version=6"></script>
+    <script type='text/javascript' src="{% static 'js/filter-form.js' %}?version=9"></script>
+    <script>
+    // Add the CSRF Token
+    app.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token|escapejs }}';
+    }]);
+    </script>
+
+    <script type='text/javascript'>
+        const g_pusher_api_key = '{{ pusher_api_key }}';
+        const g_cc_channel_name = '{{ cc_channel_name }}';
+        const g_new_call_event_name = '{{ new_call_event_name }}';
+        const g_connected_event_name = '{{ connected_event_name }}';
+        const g_hang_call_event_name = '{{ hang_call_event_name }}';
+
+        const g_missing_location = '{{ missing_location }}';
+        const g_missing_gender = '{{ missing_gender }}';
+
+        const g_call_queue_url = '{% url "call_queue" %}';
+        const g_connected_calls_url = '{% url "connected_calls" %}';
+        const g_pusher_auth_url = '{% url "pusher_auth" %}';
+
+        const g_pusher = new Pusher(g_pusher_api_key, {
+            authEndpoint: g_pusher_auth_url,
+            auth: {
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            }
+        });
+        const g_channel = g_pusher.subscribe(g_cc_channel_name);
+
+        g_channel.bind('pusher:subscription_error', function(status) {
+            console.log("Cannot authorize! Status is " + status);
+            alert("Cannot connect to! Try logging out and logging in again after closing all browser windows!");
+        });
+
+        const g_call_queue_template = '{% static "calls/partials/call_queue.html" %}';
+        const g_in_call_template = '{% static "calls/partials/in_call.html" %}';
+
+        const g_in_call_weather_template = '{% static "calls/partials/in_call_weather.html" %}';
+        const g_in_call_calls_template = '{% static "calls/partials/in_call_calls.html" %}';
+        const g_in_call_market_prices_template = '{% static "calls/partials/in_call_market_prices.html" %}';
+        const g_in_call_outgoing_sms_template = '{% static "calls/partials/in_call_outgoing_sms.html" %}';
+        const g_in_call_incoming_sms_template = '{% static "calls/partials/in_call_incoming_sms.html" %}';
+
+        const g_username = '{{ user }}';
+        const g_csrftoken = '{{ csrf_token }}';
+        var g_call_id = null;
+        var g_updates_url = null;
+    </script>
+{% endblock %}

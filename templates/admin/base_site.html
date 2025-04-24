@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% load static clients %}
+
+{# Header branding #}
+{% block branding %}
+{% client_setting "name" %}
+{% endblock %}
+
+{# Footer links (left side) #}
+{% block footer_links %}
+    <a href="/docs/" class="icon"><i class="icon-question-sign"></i>Documentation</a>
+{% endblock %}
+
+{# Footer branding name (center) #}
+{% block footer_branding %}
+{% client_setting "name" %}
+{% endblock %}
+
+{# Footer copyright #}
+{% block copyright %}
+    <div style="text-align:center;">
+        Copyright &copy;{% now "Y" %} iShamba<br>All Rights Reserved
+    </div>
+{% endblock %}

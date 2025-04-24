@@ -1,0 +1,85 @@
+Metadata-Version: 2.3
+Name: osmviz
+Version: 4.4.0
+Summary: OSMViz is a small set of Python tools for retrieving and using Mapnik tiles from a Slippy Map server (you may know these as OpenStreetMap images).
+Project-URL: Changelog, https://github.com/hugovk/osmviz/releases
+Project-URL: Documentation, https://hugovk.github.io/osmviz/
+Project-URL: Homepage, https://github.com/hugovk/osmviz
+Project-URL: Source, https://github.com/hugovk/osmviz
+Author-email: Colin Bick and Contributors <colin.bick@gmail.com>
+Maintainer: Hugo van Kemenade
+License: MIT
+License-File: LICENSE
+Keywords: osm openstreetmap tiles visualization
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Software Development :: Documentation
+Requires-Python: >=3.9
+Provides-Extra: tests
+Requires-Dist: coverage; extra == 'tests'
+Requires-Dist: pillow>=9.1; extra == 'tests'
+Requires-Dist: pytest; extra == 'tests'
+Requires-Dist: pytest-cov; extra == 'tests'
+Description-Content-Type: text/markdown
+
+# OSMViz
+
+[![PyPI version](https://img.shields.io/pypi/v/osmviz.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/osmviz/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/osmviz.svg?logo=python&logoColor=FFE873)](https://pypi.org/project/osmviz/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/osmviz.svg)](https://pypistats.org/packages/pypistats)
+[![GitHub Actions status](https://github.com/hugovk/osmviz/workflows/Test/badge.svg)](https://github.com/hugovk/osmviz/actions)
+[![codecov](https://codecov.io/gh/hugovk/osmviz/branch/main/graph/badge.svg)](https://codecov.io/gh/hugovk/osmviz)
+[![Licence](https://img.shields.io/github/license/hugovk/osmviz.svg)](LICENSE)
+[![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
+
+An OpenStreetMap Visualization Toolkit for Python
+
+## OSMViz License
+
+OSMViz is released under the MIT license.
+See LICENSE in this directory.
+
+# OpenStreetMap License
+
+Tiles taken from the openstreetmap.org server
+have a usage policy as outlined here:
+
+https://operations.osmfoundation.org/policies/tiles/
+
+These tiles are (c) OpenStreetMap & contributors, CC-BY-SA.
+OpenStreetMap: https://www.openstreetmap.org
+CC-BY-SA: https://creativecommons.org/licenses/by-sa/2.0/
+
+You can tell OSMViz to use any slippymap server provided
+tiles that you wish, which may have its own usage policy.
+
+## About
+
+OSMViz is a small set of Python tools for retrieving
+and using Mapnik tiles from a Slippy Map server
+(you may know these as OpenStreetMap images).
+
+## Requirements
+
+* Python 3.8+
+* Pillow and/or Pygame
+
+## Installation
+
+Either:
+
+    pip install osmviz
+
+Or just add the src directory to your PYTHONPATH.
+
+## Help
+
+See [html/doc.html](https://hugovk.github.io/osmviz/html/doc.html)

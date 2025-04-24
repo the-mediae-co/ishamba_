@@ -1,0 +1,17 @@
+Markets: {{ markets }}
+Commodities: {{ commodities }}
+Errors:
+{% for error in errors %}
+- {{ error }} {% endfor %}
+
+## Other info
+
+Successful (current and past) recipients of this exact SMS object: {{ sent_sms.get_extant_recipients|length }}
+{% for sms_recipient in sent_sms.get_extant_recipients %}
+- #{{ sms_recipient.recipient.pk }}, {{ sms_recipient.recipient }} {% endfor %}
+
+Sent SMS text ({{ sent_sms.text|length }} characters):
+
+> {{ sent_sms.text }}
+
+------------------------------------------------------------------------------

@@ -1,0 +1,7 @@
+<li>
+	{% if request.get_full_path == the_url %}
+	    {{ text }}
+	{% else %}
+	    <a href="{{ the_url }}">{{ text }}</a>
+	{% endif %}
+</li>

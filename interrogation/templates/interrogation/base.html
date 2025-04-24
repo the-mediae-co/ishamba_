@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load link_tags %}
+
+{% block title %}Surveys{% endblock title %}
+
+{% block nav %}
+    {% with app_name='interrogation' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Surveys' url_name='interrogation:surveys_list' %}
+{% endblock %}
+
+{% block section_header %}
+    <h1>Surveys</h1>
+{% endblock %}

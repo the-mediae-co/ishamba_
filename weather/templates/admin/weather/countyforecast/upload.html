@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> <span class="divider">»</span></li>
+    <li><a href="{% url 'admin:app_list' app_label='weather' %}">{% trans 'Weather' %}</a> <span class="divider">»</span></li>
+    <li><a href="{% url 'admin:weather_countyforecast_changelist' %}">{% trans 'County forecasts' %}</a> <span class="divider">»</span></li>
+    <li class="active">Import county forecasts</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div id="content-main" class="inner-two-columns">
+    <form enctype="multipart/form-data" method="post" id="upload_form" class="form-horizontal" novalidate>
+        <div class="inner-center-column">
+            <div class="box">
+            {% csrf_token %}
+            {{ form }}
+            </div>
+        </div>
+        <div class="inner-right-column">
+            <div class="box save-box">
+                <button class="btn btn-primary btn-high" type="submit">Import</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

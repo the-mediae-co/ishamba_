@@ -1,0 +1,26 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{{ customer }} Market price subscriptions{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Markets' url_name='customers:customer_market_subscription_list' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %} Market price subscriptions{% endblock %}
+
+{% block page_content %}
+    {% if can_add %}
+        <a class="btn btn-primary mod-subscription"
+           href="{% url 'customers:customer_market_subscription_create' customer.pk %}">
+            Add
+          </a>
+    {% else %}
+        <button class="btn btn-primary mod-subscription" disabled="disabled">Add</button>
+        (Maximum number of market price subscriptions has been reached)
+    {% endif %}
+
+    {% render_table table %}
+{% endblock %}

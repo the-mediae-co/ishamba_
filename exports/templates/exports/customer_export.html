@@ -1,0 +1,12 @@
+{% extends 'exports/exports_form.html' %}
+
+{% load link_tags %}
+
+{% block title %}Export Customers{% endblock %}
+
+{% block page_title %}Export Customers{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Export Customers' url_name='exports:customers' %}
+{% endblock %}

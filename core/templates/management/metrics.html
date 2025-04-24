@@ -1,0 +1,408 @@
+{% extends 'management/management_base.html' %}
+
+{% load crispy_forms_tags django_tables2 static humanize outgoingsmstypes dict_value time_formatting joinstopmethods %}
+
+{% block title %}Management Metrics{% endblock title %}
+
+{% block page_title %}Metrics{% endblock %}
+
+{% block page_content %}
+    {% crispy form %}
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-people-group sidenav-icon"></i> Customers
+        </div>
+        <div id="container" style="width: 100%; padding-left: 1em; padding-right: 1em;">
+            <canvas id="new-customers-chart" data-url="{% url 'new_customers_chart' %}?{% if call_center %}call_center={{ call_center.pk }}{% endif %}"></canvas>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Customer Metrics</caption>
+                <tr>
+                    <td>Total Customers (now)</td>
+                    <td>{{ metrics.total_customers|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Digifarm-only Customers (now)</td>
+                    <td>{{ metrics.df_only_customers|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Total Premium Customers (now)</td>
+                    <td>{{ metrics.premium_customers|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Total Stopped Non-DF Customers (now)</td>
+                    <td>{{ metrics.stopped_non_df_customers|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>New Customers <small>({{ metrics.start_date|naturalday }} to {{ metrics.end_date|naturalday }})</small></td>
+                    <td>{{ metrics.new_customers|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Updated Customer Records <small>({{ metrics.start_date|naturalday }} to {{ metrics.end_date|naturalday }})</small></td>
+                    <td>{{ metrics.updated_customers|intcomma }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Customer Join Methods ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in metrics.join_method_counts.items %}
+                        <tr>
+                            <td>{{ key|join_description|title }}</td>
+                            <td>{{ value|intcomma }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Customer Stop Methods ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in metrics.stop_method_counts.items %}
+                        <tr>
+                            <td>{{ key|stop_description|title }}</td>
+                            <td>{{ value|intcomma }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Top-100 Active Customers ({{ metrics.start_date }} to {{ metrics.end_date }})
+                    <small>10 points per SMS + 10 points per call + 1 point per minute of call + 20 points if Premium subscriber</small>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Score</th>
+                        <th>SMS Count</th>
+                        <th>Call Count</th>
+                        <th>Call Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in metrics.sorted_customer_scores %}
+                        <tr>
+                            <td><a href="/customers/customer/{{ c.customer_id }}/">{{ c.customer_id }}</a></td>
+                            <td>{{ c.score|intcomma }}</td>
+                            <td>{{ c.sms_count|intcomma }}</td>
+                            <td>{{ c.call_count|intcomma }}</td>
+                            <td>{{ c.call_duration|format_time }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-headphones-simple sidenav-icon"></i> Calls
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Call Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <tr>
+                    <td>Calls Received</td>
+                    <td>
+                        {{ metrics.all_received_calls.count|intcomma }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Average duration</td>
+                    <td>
+                        {{ metrics.all_received_calls.avg_duration|format_time }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Total duration</td>
+                    <td>
+                        {{ metrics.all_received_calls.total_duration|format_time }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% if metrics.cco_received_calls %}
+            <div class="card-body">
+                <table class="table-bordered table-sm ">
+                    <caption>CCO Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Call count</th>
+                            <th>Average duration</th>
+                            <th>Total duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in metrics.cco_received_calls %}
+                            <tr>
+                                <td>{{ record.cco }}</td>
+                                <td>{{ record.count|intcomma }}</td>
+                                <td>{{ record.avg_duration|format_time }}</td>
+                                <td>{{ record.total_duration|format_time }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-list-check sidenav-icon"></i> Tasks
+        </div>
+        <div id="container" style="width: 100%; padding-left: 1em; padding-right: 1em;">
+            <canvas id="task-metrics-chart" data-url="{% url 'task_metrics_chart' %}?{% if call_center %}call_center={{ call_center.pk }}{% endif %}"></canvas>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Task Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <tr>
+                    <td>Tasks Created</td>
+                    <td>{{ metrics.task_created_count|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Tasks Closed</td>
+                    <td>{{ metrics.task_closed_count|intcomma }}</td>
+                </tr>
+            </table>
+        </div>
+        {% if metrics.cco_resolved_tasks %}
+            <div class="card-body">
+                <table class="table-bordered table-sm ">
+                    <caption>CCO Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Task count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in metrics.cco_resolved_tasks %}
+                            <tr>
+                                <td>{{ record.cco }}</td>
+                                <td>{{ record.count|intcomma }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-envelopes-bulk sidenav-icon"></i> SMS
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>SMS Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <tr>
+                    <td>Total SMS Received</td>
+                    <td>{{ metrics.received_sms_count|intcomma }}</td>
+                    <td>KES 0.00</td>
+                </tr>
+                <tr>
+                    <td>Total SMS Sent<br>
+                    </td>
+                    <td>{{ metrics.sent_sms_count|intcomma }} </td>
+                    <td>{{ metrics.sent_sms_cost_units|upper }} {{ metrics.sent_sms_cost|intcomma }}</td>
+                </tr>
+                {% for key, value in metrics.sms_type_counts.items %}
+                    <tr>
+                        <td>
+                            <i class="fa-solid fa-{{ key|sms_type_icon }} sidenav-icon"></i>
+                            Number of {{ key|sms_type_description }}{{ value|pluralize }}
+                        </td>
+                        <td>{{ value|intcomma }}</td>
+                        <td>
+                            {{ metrics.sms_type_cost_units|dict_value:key|upper }} {{ metrics.sms_type_costs|dict_value:key|intcomma }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-robot sidenav-icon"></i> USSD
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>USSD Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <tr>
+                    <td>Registrations Started</td>
+                    <td>{{ metrics.ussd_start_count|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Registrations Completed</td>
+                    <td>{{ metrics.ussd_success_count|intcomma }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-regular fa-calendar-days sidenav-icon"></i> Crop History
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Crop History Metrics ({{ metrics.start_date }} to {{ metrics.end_date }})</caption>
+                <tr>
+                    <td>Crop Histories Created</td>
+                    <td>{{ metrics.crop_history_count|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Crop Histories Updated</td>
+                    <td>{{ metrics.crop_history_updated_count|intcomma }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    {% comment %}
+    {# Disabled as tip subscriptions not managed this way anymore. Fix in Kaan's subscriptions work #}
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-graduation-cap sidenav-icon"></i> Tips
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Tip Subscriptions (now)</caption>
+                {% regroup metrics.tips|dictsortreversed:"num_subscribers" by num_subscribers as subscribers_list %}
+                {% for subscribers in subscribers_list %}
+                    <tr>
+                        <td>{{ subscribers.grouper|intcomma }}</td>
+                        <td>
+                            {% for tss in subscribers.list %}
+                                {{ tss.name }}{% include 'comma.html' %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endcomment %}
+
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-leaf sidenav-icon"></i> Commodities
+        </div>
+        <div class="card-body">
+            <table class="table-bordered table-sm ">
+                <caption>Commodity Interests (now)</caption>
+                {% regroup metrics.commodities|dictsortreversed:"num_subscribers" by num_subscribers as subscribers_list %}
+                {% for subscribers in subscribers_list %}
+                    <tr>
+                        <td>{{ subscribers.grouper|intcomma }}</td>
+                        <td>
+                            {% for commodity in subscribers.list %}
+                                {{ commodity.name }}{% include 'comma.html' %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+          let $newCustomerChart = $("#new-customers-chart");
+          // Extract the date range from the form
+          let startDate = $('form input#id_start_date').val();
+          let endDate = $('form input#id_end_date').val();
+          $.ajax({
+            url: $newCustomerChart.data("url"),
+            data: {'startDate': startDate, 'endDate': endDate},
+            success: function (data) {
+              let ctx = $newCustomerChart[0].getContext("2d");
+              new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: data.labels,
+                  datasets: [{
+                    label: 'New Customers',
+                    backgroundColor: 'blue',
+                    data: data.data
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  legend: {
+                    position: 'top',
+                  },
+                  title: {
+                    display: true,
+                    text: "New Customers"
+                  }
+                }
+              });
+            }
+          });
+        });
+        $(function () {
+          let $taskMetricsChart = $("#task-metrics-chart");
+          // Extract the date range from the form
+          let startDate = $('form input#id_start_date').val();
+          let endDate = $('form input#id_end_date').val();
+          $.ajax({
+            url: $taskMetricsChart.data("url"),
+            data: {'startDate': startDate, 'endDate': endDate},
+            success: function (data) {
+              let ctx = $taskMetricsChart[0].getContext("2d");
+              new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: data.labels,
+                  datasets: [
+                      {
+                        label: 'New Tasks',
+                        backgroundColor: 'blue',
+                        data: data.data[0]
+                      },
+                      {
+                        label: 'Tasks Resolved',
+                        backgroundColor: 'green',
+                        data: data.data[1]
+                      }
+                  ]
+                },
+                options: {
+                  responsive: true,
+                  legend: {
+                    position: 'top',
+                  },
+                  title: {
+                    display: true,
+                    text: "Task Metrics"
+                  }
+                }
+              });
+            }
+          });
+        });
+  </script>
+{% endblock %}

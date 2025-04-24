@@ -1,0 +1,217 @@
+<div class="container-fluid">
+    <div class="row row-no-gutters">
+        <div class="col-md-6">
+            <h2>Current call:
+                <span class="badge badge-success" ng-if="call.connected == true">Connected</span>
+                <span class="badge badge-danger" ng-if="call.connected == false">Ended</span>
+                <span class="badge badge-warning" ng-if="call.customer.call_set.length <= 1">
+                    NEW CUSTOMER:
+                    <a href="/customers/customer/{{call.customer.id}}/edit/" target="_blank">Edit</a>
+                </span>
+            </h2>
+        </div>
+        <div class="col-md-6" id="updates_title" style="display: none;">
+            <h3 class="text-danger">Updates needed:</h3>
+        </div>
+    </div>
+    <div class="row row-no-gutters">
+        <div class="col-md-6">
+            <form name="callForm" id="callForm">
+                <p ng-repeat="(name, errs) in errors" class="alert alert-danger">
+                    <strong>{{ name }}</strong>: {{ errs.join(', ') }}
+                </p>
+                <div class="form-group">
+                    <label for="Call_notes">Call notes:</label>
+                    <textarea placeholder="Call notes." class="form-control form-control-sm" id="call_notes" rows="4" cols="40"
+                              ng-model="call.notes"
+                              ng-model-options="{ debounce: 1500 }"
+                              ng-keyup="callFormSetStatus('unsaved')">
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox"
+                           ng-model="call.issue_resolved"
+                           ng-model-options="{ debounce: 1500 }"
+                           id="issue_resolved "value="Issue resolved?"
+                           ng-change="callFormSetStatus('unsaved')">
+                    <label for="issue_resolved">Is resolved?</label>
+                </div>
+                <div ng-show="callFormCheckStatus('unsaved')">Saving&hellip;</div>
+                <div ng-show="callFormCheckStatus('saved')">Changes saved</div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form name="updates_form" id="updates_form" action="" method="patch" style="display: none;">
+                <div id="div_id_border0" class="form-group" style="display: none;">
+                    <label for="id_border0">County</label>
+                    <select name="border0" id="id_border0" form="updates_form">
+                        <option value="1" selected>Kenya</option>
+                        <option value="1802" selected>Uganda</option>
+                        <option value="4702" selected>Zambia</option>
+                    </select>
+                </div>
+                <div id="div_id_border1" class="form-group" style="display: none;">
+                    <label for="id_border1">County</label>
+                    <select name="border1" id="id_border1" form="updates_form">
+                        <option value="">---------</option> <option value="2">Baringo (Kenya)</option> <option value="4">Bomet (Kenya)</option> <option value="5">Bungoma (Kenya)</option> <option value="6">Busia (Kenya)</option> <option value="7">Elgeyo Marakwet (Kenya)</option> <option value="8">Embu (Kenya)</option> <option value="9">Garissa (Kenya)</option> <option value="10">Homa Bay (Kenya)</option> <option value="11">Isiolo (Kenya)</option> <option value="12">Kajiado (Kenya)</option> <option value="13">Kakamega (Kenya)</option> <option value="14">Kericho (Kenya)</option> <option value="15">Kiambu (Kenya)</option> <option value="16">Kilifi (Kenya)</option> <option value="17">Kirinyaga (Kenya)</option> <option value="18">Kisii (Kenya)</option> <option value="19">Kisumu (Kenya)</option> <option value="20">Kitui (Kenya)</option> <option value="21">Kwale (Kenya)</option> <option value="22">Laikipia (Kenya)</option> <option value="23">Lamu (Kenya)</option> <option value="24">Machakos (Kenya)</option> <option value="25">Makueni (Kenya)</option> <option value="26">Mandera (Kenya)</option> <option value="27">Marsabit (Kenya)</option> <option value="28">Meru (Kenya)</option> <option value="29">Migori (Kenya)</option> <option value="30">Mombasa (Kenya)</option> <option value="3">Murang&#x27;a (Kenya)</option> <option value="31" selected>Nairobi (Kenya)</option> <option value="32">Nakuru (Kenya)</option> <option value="33">Nandi (Kenya)</option> <option value="34">Narok (Kenya)</option> <option value="35">Nyamira (Kenya)</option> <option value="36">Nyandarua (Kenya)</option> <option value="37">Nyeri (Kenya)</option> <option value="38">Samburu (Kenya)</option> <option value="39">Siaya (Kenya)</option> <option value="40">Taita Taveta (Kenya)</option> <option value="41">Tana River (Kenya)</option> <option value="42">Tharaka Nithi (Kenya)</option> <option value="43">Trans Nzoia (Kenya)</option> <option value="44">Turkana (Kenya)</option> <option value="45">Uasin Gishu (Kenya)</option> <option value="46">Vihiga (Kenya)</option> <option value="47">Wajir (Kenya)</option> <option value="48">West Pokot (Kenya)</option>
+                    </select>
+                </div>
+                <div id="div_id_border2" class="form-group" style="display: none;">
+                    <label for="id_border2">Subcounty</label>
+                    <select name="border2" id="id_border2" form="updates_form">
+                        <option value="" selected>---------</option>
+                    </select>
+                </div>
+                <div id="div_id_border3" class="form-group" style="display: none;">
+                    <label for="id_border3">Ward</label>
+                    <select name="border3" id="id_border3" form="updates_form">
+                        <option value="" selected>---------</option>
+                    </select>
+                </div>
+                <div id="div_id_gender" class="form-group" style="display: none;">
+                    <label for="id_gender">Gender</label>
+                    <select name="gender" id="id_gender" form="updates_form">
+                        <option value="" selected>---------</option> <option value="f">Female</option> <option value="m">Male</option>
+                    </select>
+                </div>
+                <div id="div_saving_toast" style="display: none;">Saving...</div>
+                <div id="div_saved_toast" style="display: none;">Changes saved</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card border-light">
+    <div class="card-header">
+        <ul class="nav nav-tabs" id="inCallTabs" role="tablist">
+            <li ng-class="{active:tabActive('call')}" class="nav-item active" role="presentation">
+                <a href ng-click="setTab('call')" class="nav-link" id="call-tab" type="button" role="tab" aria-controls="call" aria-selected="true">Call</a>
+            </li>
+            <li ng-class="{active:tabActive('customer')}" class="nav-item" role="presentation">
+                <a href ng-click="setTab('customer')" class="nav-link" id="customer-tab" type="button" role="tab" aria-controls="customer" aria-selected="false">Customer</a>
+            </li>
+            <li ng-class="{active:tabActive('weather')}" class="nav-item" role="presentation">
+                <a href ng-click="setWeatherTab()" class="nav-link" id="weather-tab" type="button" role="tab" aria-controls="weather" aria-selected="false">Weather</a>
+            </li>
+            <li ng-class="{active:tabActive('outgoing_sms')}" class="nav-item" role="presentation">
+                <a href ng-click="setOutgoingSMSTab()" class="nav-link" id="outgoing-sms-tab" type="button" role="tab" aria-controls="outgoing-sms" aria-selected="false">Outgoing SMS</a>
+            </li>
+            <li ng-class="{active:tabActive('incoming_sms')}" class="nav-item" role="presentation">
+                <a href ng-click="setIncomingSMSTab()" class="nav-link" id="incoming-sms-tab" type="button" role="tab" aria-controls="incoming-sms" aria-selected="false">Incoming SMS</a>
+            </li>
+            <li ng-class="{active:tabActive('calls_list')}" class="nav-item" role="presentation">
+                <a href ng-click="setTab('calls_list')" class="nav-link" id="calls-list-tab" type="button" role="tab" aria-controls="calls-list" aria-selected="false">Calls</a>
+            </li>
+            <li ng-class="{active:tabActive('map')}" class="nav-item" role="presentation">
+                <a href ng-click="setTab('map')" class="nav-link" id="map-tab" type="button" role="tab" aria-controls="map" aria-selected="false">Map</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="panel-body">
+        <div class="tab-content">
+            <div ng-show="tabActive('call')" id="call" role="tabpanel" aria-labelledby="call-tab">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Started</th>
+                            <th>Connected</th>
+                            <th ng-if="call.hanged_on">Hung up on:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ call.caller_number }}</td>
+                            <td ng-if="call.customer.name">
+                                {{ call.customer.name }}
+                            </td>
+                            <td ng-if="call && !call.customer.name">
+                                Unknown. Ask Customer and
+                                <a href="/customers/customer/{{call.customer.id}}/edit/" target="_blank">edit their record</a>.
+                            </td>
+                            <td>{{ call.created_on| date:'HH:mm:ss' }}</td>
+                            <td>{{ call.connected_on| date:'HH:mm:ss' }}</td>
+                            <td ng-if="call.hanged_on">
+                                {{ call.hanged_on| date:'HH:mm:ss' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div ng-show="tabActive('customer')" id="customer" role="tabpanel" aria-labelledby="customer-tab">
+                <div ng-if="call.customer">
+                    <a class="btn btn-primary" href="/customers/customer/{{call.customer.id}}/edit/" target="_blank">Edit Customer</a>
+                </div>
+                <dl class="dl-horizontal mod-in-call-customer-tab">
+                    <dt>Commodities:</dt>
+                    <dd>
+                        <span ng-repeat="c in call.customer.commodities">
+                            {{c}}{{$last ? '' : ', '}}
+                        </span>
+                    </dd>
+                    <dt>Tip Series Subscriptions:</dt>
+                    <dd>
+                        <span ng-repeat="ts in call.customer.tip_subscriptions">
+                            {{ts.name}}{{$last ? '' : ', '}}
+                        </span>
+                    </dd>
+                    <dt>Market Price Subscriptions:</dt>
+                    <dd>
+                        <span ng-repeat="ms in call.customer.market_subscriptions">
+                            {{ms.name}}{{$last ? '' : ', '}}
+                        </span>
+                    </dd>
+                    <dt>Notes:</dt>
+                    <dd>{{ call.customer.notes }}</dd>
+                </dl>
+            </div>
+
+            <div ng-show="tabActive('calls_list')" id="calls-list" role="tabpanel" aria-labelledby="calls-list-tab">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Created on</th>
+                            <th>CCO</th>
+                            <th>Notes</th>
+                            <th>Issue Resolved?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='prev_call in call.customer.call_set'>
+                            <td>{{ prev_call.created_on| date:'dd/MM/yy HH:mm' }}</td>
+                            <td>{{ prev_call.cco }}</td>
+                            <td>{{ prev_call.notes }}</td>
+                            <td>{{ prev_call.issue_resolved }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div ng-show="tabActive('weather')" id="weather" role="tabpanel" aria-labelledby="weather-tab">
+                <div weather></div>
+            </div>
+
+            <div ng-show="tabActive('market_prices')" id="market-prices" role="tabpanel" aria-labelledby="market-prices-tab">
+                <div market-prices></div>
+            </div>
+
+            <div ng-show="tabActive('outgoing_sms')" id="outgoing-sms" role="tabpanel" aria-labelledby="outgoing-sms-tab">
+                <div ng-if="call.customer">
+                    <a class="btn btn-primary" href="/customers/customer/{{call.customer.id}}/sms/outgoing/send/" target="_blank">Send New SMS to Customer</a>
+                </div>
+                <div outgoing-sms></div>
+            </div>
+
+            <div ng-show="tabActive('incoming_sms')" id="incoming-sms" role="tabpanel" aria-labelledby="incoming-sms-tab">
+                <div incoming-sms></div>
+            </div>
+
+            <div ng-show="tabActive('map')" id="map" role="tabpanel" aria-labelledby="map-tab">
+                <ishambaleafletmap />
+            </div>
+        </div>
+    </div>
+</div>

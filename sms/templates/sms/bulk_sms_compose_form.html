@@ -1,0 +1,24 @@
+{% extends 'management/management_base.html' %}
+
+{% load crispy_forms_tags link_tags static %}
+
+{% block title %}Bulk SMS Compose{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Bulk SMS compose' url_name='core_management_customer_filter' %}
+{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block page_title %}Compose bulk SMS for {% include 'sms/includes/customer_count.html' %}{% endblock %}
+
+{% block page_content %}
+    {% crispy form %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/sms-character-counter.js' %}?version=6"></script>
+{% endblock %}

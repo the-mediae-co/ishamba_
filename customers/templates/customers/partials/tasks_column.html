@@ -1,0 +1,8 @@
+{% for task in tasks %}
+    <a {% if task.is_closed %}class="task_closed" {% endif %} href="{% url 'task_update' task.id %}">
+        {{ task.id }}
+    </a>
+    {% if not forloop.last %}, {% endif %}
+{% empty %}
+    <small>Template response</small>
+{% endfor %}

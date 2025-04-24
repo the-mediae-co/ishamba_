@@ -1,0 +1,7 @@
+Line #{{ line|safe }} of {{ filename }}
+===========
+{% for error in errors %}
+* {{ error.error|safe }}
+
+{{ error.traceback|safe }}{% endfor %}
+------------------------------------------------------------------------------

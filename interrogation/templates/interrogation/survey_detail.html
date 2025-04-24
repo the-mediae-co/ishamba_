@@ -1,0 +1,202 @@
+{% extends 'interrogation/base.html' %}
+
+{% load add_get crispy_forms_tags django_tables2 humanize link_tags static %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=survey_title url_name='interrogation:survey_detail' survey_title=survey_title %}
+{% endblock %}
+
+{% block page_title %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>{{ survey_title }} Survey</h2>
+        <a class="btn btn-sm btn-info" id="jump-to-last-page" href="{% add_get page=page_obj.paginator.num_pages %}" role="button">Jump to last page</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div class="left">
+
+        <!-- Filter Form -->
+        <form method="GET" id="filter-form" class="mb-4">
+            <div class="form-row">
+                <div class="col-md-3">
+                    <label for="age">Filter by Age:</label>
+                    <select id="age" name="age" class="form-control">
+                        <option value="">All</option>
+                        <option value="18-24" {% if request.GET.age == "18-24" %}selected{% endif %}>18-24</option>
+                        <option value="26-34" {% if request.GET.age == "25-34" %}selected{% endif %}>25-34</option>
+                        <option value="36-44" {% if request.GET.age == "35-44" %}selected{% endif %}>35-44</option>
+                        <option value=">44" {% if request.GET.age == "45+" %}selected{% endif %}>45+</option>
+
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="county">Filter by County:</label>
+                    <select id="county" name="county" class="form-control">
+                        <option value="">All</option>
+                        {% for county in county_options %}
+                            <option value="{{ county }}" {% if request.GET.county == county %}selected{% endif %}>{{ county }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="sex">Filter by Sex:</label>
+                    <select id="sex" name="sex" class="form-control">
+                        <option value="">All</option>
+                        <option value="m" {% if request.GET.sex == "m" %}selected{% endif %}>Male</option>
+                        <option value="f" {% if request.GET.sex == "f" %}selected{% endif %}>Female</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Table of Survey Responses -->
+        <form method="POST" id="record-selection-form">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="survey-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Select</th>
+                            {% for header in headers %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for survey in survey_data %}
+                        <tr>
+                            <td><input type="checkbox" class="record-checkbox" name="selected_records" value="{{ survey.0 }}"></td>
+                            {% for item in survey %}
+                            <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="{{ headers|length }}" class="text-center">No data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+{% if survey_data %}
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="mb-3">
+                    <button type="button" id="select-all" class="btn btn-secondary">Select All <span id="selected-count">({{ selected_records_count }})</span></button>
+                    <button type="button" id="clear-all" class="btn btn-secondary">Clear All</button>
+                    <input type="checkbox" id="select-all-checkbox">
+                </div>
+                <span>Total respondents: {{ total_respondents }}</span>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="pagination-controls">
+                        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}&age={{ request.GET.age }}&county={{ request.GET.county }}&sex={{ request.GET.sex }}" class="btn btn-secondary btn-sm">Previous</a>
+                        {% else %}
+                        <a href="#" class="btn btn-secondary btn-sm disabled">Previous</a>
+                        {% endif %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}&age={{ request.GET.age }}&county={{ request.GET.county }}&sex={{ request.GET.sex }}" class="btn btn-secondary btn-sm">Next</a>
+                        {% else %}
+                        <a href="#" class="btn btn-secondary btn-sm disabled">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 d-flex flex-column mt-4">
+                <label for="export-format">Export Format:</label>
+                <select name="export-format" id="export-format" class="custom-select">
+                    {% for format in export_formats %}
+                    <option value="{{ format }}">{{ format }}</option>
+                    {% endfor %}
+                </select>
+                <small id="export-success-toast" class="mt-auto ml-auto">Status:</small>
+                <button type="button" id="export-button" name="export-survey" onclick="generateEmailReport(this)" class="btn btn-primary mt-2"> Email all records</button>
+            </div>
+        </form>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static "js/surveys.js" %}?version=9"></script>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static "js/filter-form.js" %}?version=9"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectAllButton = document.getElementById('select-all');
+        const clearAllButton = document.getElementById('clear-all');
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const checkboxes = document.querySelectorAll('input.record-checkbox');
+        const selectedCount = document.getElementById('selected-count');
+        const recordSelectionForm = document.getElementById('record-selection-form');
+        const exportButton = document.getElementById('export-button');
+
+        if (selectAllButton && clearAllButton && selectAllCheckbox && selectedCount && checkboxes.length > 0) {
+            const updateSelectedCount = () => {
+                const checkedCount = document.querySelectorAll('input.record-checkbox:checked').length;
+                selectedCount.textContent = `(${checkedCount})`;
+                if (exportButton) {
+                    if (checkedCount > 0) {
+                        exportButton.textContent = `Email selected records (${checkedCount})`;
+                    } else {
+                        exportButton.textContent = "Email all records";
+                    }
+                }
+            };
+
+            selectAllButton.addEventListener('click', () => {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                updateSelectedCount();
+            });
+
+            clearAllButton.addEventListener('click', () => {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedCount();
+            });
+
+            selectAllCheckbox.addEventListener('change', () => {
+                const isChecked = selectAllCheckbox.checked;
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+                updateSelectedCount();
+            });
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+        } else {
+            console.warn('Survey data not available or required elements are missing.');
+        }
+
+        if (recordSelectionForm) {
+            recordSelectionForm.addEventListener('submit', function(event) {
+                const selectedRecords = document.querySelectorAll('input.record-checkbox:checked');
+                if (selectedRecords.length === 0) {
+                    event.preventDefault();
+                    alert("Please select at least one record.");
+                    return false;
+                }
+            });
+        } else {
+            console.warn('Record selection form not found.');
+        }
+    });
+    </script>
+
+{% endblock %}

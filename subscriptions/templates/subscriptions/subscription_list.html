@@ -1,0 +1,16 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{{ customer }} Subscriptions{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Subscriptions' url_name='customers:customer_subscription_list' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Subscription history{% endblock %}
+
+{% block page_content %}
+    {% render_table table %}
+{% endblock %}

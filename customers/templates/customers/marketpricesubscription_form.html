@@ -1,0 +1,34 @@
+{% extends 'customers/marketpricesubscription_list.html' %}
+
+{% load crispy_forms_tags link_tags django_tables2 static %}
+
+{% block title %}
+    {% if object %}
+        Edit market price subscription
+    {% else %}
+        Add market price subscription
+    {% endif %}
+{% endblock title %}
+
+{% block page_title %}
+    {% if object %}
+        Edit market price subscription
+    {% else %}
+        Add market price subscription
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% if object %}
+        {% breadcrumb_entry text='Edit' url_name='customers:customer_market_subscription_update' pk=object.pk c_pk=customer.pk%}
+    {% else %}
+        {% breadcrumb_entry text='Add' url_name='customers:customer_market_subscription_create' pk=customer.pk %}
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="subscriptions-form">
+    {% crispy form %}
+    </div>
+{% endblock %}

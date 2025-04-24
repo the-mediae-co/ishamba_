@@ -1,0 +1,759 @@
+/**
+ * CSS3 Properties
+ * Original Author: Helen Chapman - Torchbox
+ * Recent Author: Jim VanPeursem - iShamba / Mediae
+ */
+a {
+  color: #3D77D3;
+  text-decoration: none;
+}
+a:hover,
+a:focus,
+a:active {
+  text-decoration: underline;
+  color: #3162A8;
+  -webkit-transition: color 1s ease;
+  -moz-transition: color 1s ease;
+  -o-transition: color 1s ease;
+  transition: color 1s ease;
+}
+.action-stream {
+  background: #e5e5e5;
+  margin: 0;
+}
+.action-stream .action {
+  background: white;
+  border-radius: 3px;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+.action-stream .action-text {
+  display: inline-block;
+  font-size: 14px;
+  margin: 0;
+  padding: 0 0 0 4px;
+}
+.action-stream .action-time {
+  background: #BBDEFB;
+  bottom: 0;
+  color: #1E88E5;
+  display: inline-block;
+  font-size: 14px;
+  height: 100%;
+  opacity: 0.6;
+  padding: 0 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.action-stream .action-time-value {
+  display: block;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.action-stream .badge {
+  color: #000;
+  margin: 0 0 0 4px;
+}
+.action-stream .badge.badge {
+  background-color: #ffb74d;
+  color: #e65100;
+}
+.action-stream .badge.mod-closed {
+  background: #EF5350;
+  color: #eceff1;
+}
+.action-stream .badge.mod-critical {
+  background-color: #e65100;
+  color: #fff;
+}
+.action-stream .badge.mod-high {
+  background-color: #fb8c00;
+  color: #fff;
+}
+.action-stream .badge.mod-open {
+  background: #43A047;
+  color: #E8F5E9;
+}
+.action-stream .badge.mod-tag {
+  background: #00897b;
+  color: #fff;
+}
+.action-stream .badge.mod-unassigned {
+  background: #8e24aa;
+  color: #f3e5f5;
+}
+.action-stream .badge.mod-waiting-for-reply {
+  background: #3949ab;
+  color: #eceff1;
+}
+.action-stream .chip {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 32px;
+  padding: 0 12px;
+}
+.action-stream li {
+  padding: 0.5em;
+  overflow: hidden;
+  display: flex;
+}
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+}
+.alert-error {
+  background-color: #E74C3C;
+  border-color: #e42533;
+  color: white;
+}
+.alert-info {
+  background-color: #90b1e6;
+  border-color: #90b1e6;
+  color: white;
+}
+.alert-panel-delete {
+  border-color: #ff80ff;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px #ebccd1;
+}
+.alert-success {
+  background-color: #61A368;
+  border-color: #61A368;
+  color: white;
+}
+.alert-warning {
+  background-color: #F39C12;
+  border-color: #F39C12;
+  color: white;
+}
+.breadcrumb {
+    font-size: 85%;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+.bottom-buffer {
+  margin-bottom: 15px;
+}
+.btn-primary {
+    background-color: #337ab7;
+}
+.a.mod-subscription,
+.btn.mod-subscription {
+  position: relative;
+  top: 5px;
+  margin-bottom: 15px;
+}
+.button {
+  background-color: #3D77D3;
+  color: white;
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px;
+  text-align: center;
+  border: none;
+}
+.button.active {
+  background-color: white;
+  border: 1px solid #3D77D3;
+  color: #3D77D3;
+  padding: 7px 20px;
+}
+.button.disabled {
+  background-color: #A6A6A6;
+  cursor: default;
+  text-decoration: none;
+}
+.button:active,
+.button:focus,
+.button:hover {
+  background-color: #3162A8;
+  -webkit-transition: background-color 0.75s ease;
+  -moz-transition: background-color 0.75s ease;
+  -o-transition: background-color 0.75s ease;
+  transition: background-color 0.75s ease;
+  color: white;
+}
+.button-hover {
+  background-color: #3162A8;
+  -webkit-transition: background-color 0.75s ease;
+  -moz-transition: background-color 0.75s ease;
+  -o-transition: background-color 0.75s ease;
+  transition: background-color 0.75s ease;
+}
+/*.card {*/
+/*    border-radius: 3px;*/
+/*    margin-bottom: 4px;*/
+/*    border-color: #dddddd;*/
+/*    border-width: 1px;*/
+/*}*/
+.card-body {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.card-header {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    margin-bottom: 0.5rem;
+    color: white;
+
+}
+.card-header .indicator {
+    float: right;
+    padding-right: 0.5rem;
+    font-size: 1.2em;
+}
+.card-header.mod-collapsible {
+    cursor: pointer;
+    margin-bottom: 0;
+}
+.card-header:not(.collapsed) .rotate-icon {
+    transform: rotate(90deg);
+}
+/*.card-header.collapsed {*/
+    /*color: white;*/
+/*}*/
+.card-header.mod-verify-offer {
+  text-align: center;
+}
+.card.sidenav {
+    padding: 5px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    border-color: #dddddd;
+    border-width: 1px;
+}
+.card.sidenav-item {
+    margin: 5px;
+    border-color: #dddddd;
+    border-width: 1px;
+}
+.card.sidenav-item > .card-header {
+    font-weight: bold;
+    color: black;
+    background-color: #f4f4f4;
+    border: 1px #337ab7;
+    padding: 10px 15px 1px;
+    margin-bottom: 0;
+}
+.card.sidenav-item .card-title{
+  margin-bottom: 0.5rem;
+}
+.card-title {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+.character-counter {
+  /*margin-top: -15px;*/
+}
+.chip {
+  display: inline-block;
+  padding: 0 15px;
+  height: 30px;
+  font-size: 12px;
+  line-height: 30px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+}
+.chip img {
+  float: left;
+  margin: 0 10px 0 -15px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.customer-details > dd {
+    margin-bottom: 0.2rem;
+}
+.customer-details > dt {
+    margin-bottom: 0.2rem;
+}
+div.leaflet-control-layers-overlays > label {
+    margin-bottom: 0;
+    font-size: 0.96em;
+}
+div.leaflet-control-layers-overlays > label > span > input {
+    width: 0.96em;
+    height: 0.96em;
+}
+div.leaflet-control-layers-expanded {
+    padding: 4px 6px 4px 4px;
+}
+dd {
+  display: block;
+  float: left;
+  margin-left: 1em;
+}
+dl {
+  *zoom: 1;
+  color: #5D5D5D;
+}
+dl:after,
+dl:before {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+dl:after {
+  clear: both;
+}
+dl.customer-details {
+    line-height: 1rem;
+}
+.dl-horizontal.mod-in-call-customer-tab dt {
+  width: 200px;
+}
+.dl-horizontal.mod-in-call-customer-tab dd {
+  margin-left: 10px;
+}
+.dl-horizontal.mod-offer-detail dt {
+  width: 250px;
+  text-align: left;
+}
+.dl-horizontal.mod-offer-detail dd {
+  margin-left: 10px;
+}
+.dropdown-menu.mod-sidenav {
+  box-shadow: initial;
+  position: relative;
+}
+.dropdown-menu.mod-sidenav li a {
+  white-space: normal;
+  padding: 10px 15px;
+}
+.dropdown-menu.mod-sidenav .dropdown-item {
+  display: flex;
+}
+.dropdown.mod-management {
+  display: flex;
+  flex-direction: column;
+}
+dt {
+  display: block;
+  float: left;
+  clear: left;
+  font-weight: bold;
+}
+.form-group {
+    margin-bottom: 0.5rem;
+}
+.js-market-remove.mod-market-remove {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  text-decoration: none;
+}
+header {
+  height: 130px;
+  background-color: #3162A8;
+  position: relative;
+}
+header h1 {
+  color: white;
+  font-size: 2rem;
+  font-weight: normal;
+  margin: 0;
+  padding: 15px 0 0;
+}
+header .logo {
+  display: block;
+  width: 68px;
+  height: 73px;
+  position: absolute;
+  float: right;
+  right: 45px;
+  top: 15px;
+  /* vertically centred */
+}
+header nav {
+    clear: both;
+    font-size: 110%;
+    position: absolute;
+    bottom: 0;
+}
+header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+header nav ul li {
+  float: left;
+}
+header nav ul li a {
+  display: block;
+  padding: 15px 20px;
+  background-color: #527AB3;
+  color: white;
+  border-right: 1px solid #99b0d2;
+}
+header nav ul li a:active,
+header nav ul li a:focus,
+header nav ul li a:hover {
+  background-color: white;
+  color: #3D77D3;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  text-decoration: none;
+}
+header nav ul li:last-child a {
+  border-right: none;
+}
+/* Make the spacing on the help block a little nicer */
+.help-block {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 0.8em;
+  color: gray;
+}
+.hidden {
+  height: 1px;
+  /* Some older browsers don't support 0px high block elements */
+  height: 0px;
+  overflow: hidden;
+  text-indent: -9999%;
+}
+.hide {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+html {
+    /*font-size: 62.5%;*/
+    font-size: 90%;
+    /*font-family: "Open Sans", sans-serif;*/
+    /*font-family: "Helvetica Neue", "Arial Narrow", Helvetica, Arial, sans-serif;*/
+}
+.illegal-gms-character {
+  color: darkred;
+}
+#jump-to-last-page {
+    position: relative;
+    bottom: 4px;
+    left: 1.5rem;
+}
+label.disabled {
+  color: #A6A6A6;
+  cursor: not-allowed;
+}
+.left-column-menu {
+  width: 20%;
+  float: left;
+}
+.left-column-narrow {
+  float: left;
+  width: 30%;
+  min-width: 230px;
+}
+.left-column-wide {
+  float: left;
+  width: 70%;
+}
+main {
+  *zoom: 1;
+  margin-bottom: 30px;
+  color: black;
+}
+main:after {
+  clear: both;
+}
+main:after,
+main:before {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+main h2 {
+  font-size: 2rem;
+  margin-top: 0;
+  line-height: 1.5em;
+}
+.message {
+  background: white;
+  padding: 10px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  min-width: 70%;
+}
+.message p {
+  margin: 0 0 0.2em 0;
+}
+.message time {
+  font-size: 0.9em;
+  color: #ccc;
+}
+/* django alert messages*/
+.messages {
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.messages .alert {
+  margin-bottom: 0px;
+}
+.messages li {
+  padding: 10px 30px;
+  list-style-type: none;
+}
+.multiple-gsm-pages {
+  color: darkred;
+}
+.outgoing {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.outgoing .avatar {
+  order: 2;
+}
+.outgoing .message {
+  order: 1;
+  border-bottom-right-radius: 0;
+}
+.pagination {
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+.pagination > .active > span {
+    color: white;
+    background-color: #337ab7 !Important;
+}
+.pagination > li > a {
+    color: #337ab7;
+}
+#reset-selections {
+    position: relative;
+    left: 1.5rem;
+}
+.right-column-narrow {
+  width: 20%;
+  float: left;
+  margin-left: 5%;
+  min-width: 230px;
+}
+@media only screen and (max-width: 985px) {
+  .right-column-narrow {
+    margin-left: 0;
+  }
+}
+.right-column-wide {
+  width: 50%;
+  float: left;
+  margin-left: 5%;
+}
+@media only screen and (max-width: 985px) {
+  .right-column-wide {
+    margin-left: 0;
+  }
+}
+select {
+  min-width: 200px;
+  margin-left: 1px;
+  /* stops the select boxes overlapping the column divs */
+  height: 30px;
+}
+#select-all-customers {
+    position: relative;
+    left: 1.5rem;
+}
+#select-all-tasks {
+    position: relative;
+    left: 1.5rem;
+}
+#selected-items-div {
+    border-top: 1px solid #337ab740;
+    padding-top: 1rem;
+}
+/* Clean up the select2 layout */
+.select2.select2-container {
+    width: 100% !important;
+    font-size: 0.9em !important;
+}
+.select2-container .select2-search--inline {
+    float: none !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #c7e7f8 !important;
+    margin-right: 2px !important;
+    margin-left: 2px !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+    padding-left: 5px !important;
+    margin-left: 5px !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding-left: 0 !important;
+}
+/*.sidenav-child-link a {*/
+    /*color: #fff;*/
+/*}*/
+.sidenav-child-link a:hover,
+.sidenav-child-link a:focus {
+  text-decoration: none;
+}
+.sidenav-child-link.is-active {
+  background-color: #3162A8;
+}
+.sidenav-child-link.is-active a {
+  color: #F7F7F7;
+}
+.sidenav-child-link-item {
+  display: flex;
+}
+.sidenav-icon {
+  padding-top: 3px;
+  margin-right: 5px;
+}
+.sidenav-link {
+    color: #333333;
+    text-decoration: none;
+}
+.sidenav-link:focus,
+.sidenav-link:hover {
+    color: #3071a9;
+    text-decoration: none;
+}
+.sidenav-link.is-active {
+    color: #3162A8;
+}
+.sidenav-ul {
+  margin-top: 0;
+}
+table {
+  width: 100%;
+}
+table > caption {
+    caption-side:top;
+    padding-top: 0;
+    /*padding-bottom: 0;*/
+}
+.table-cardinality {
+    justify-content: center !important;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+    white-space: normal;
+}
+#task-update-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+#tasks-bulk-update .row {
+  display: flex;
+}
+#tasks-bulk-update .row .col-sm-6 {
+  display: flex;
+  flex-direction: column;
+}
+#tasks-bulk-update .row .col-sm-6 .btn {
+  margin-top: auto;
+  margin-bottom: 15px;
+}
+#tasks-list .assignees {
+  width: 160px;
+}
+#tasks-list .created {
+  width: 160px;
+}
+#tasks-list .customer {
+  width: 150px;
+}
+#tasks-list .priority,
+#tasks-list .status {
+  width: 100px;
+  text-align: center;
+}
+tbody tr:nth-child(odd) {
+  background: #F7F7F7;
+}
+td,
+th {
+  padding: 10px;
+  text-align: left;
+}
+th {
+  color: #5D5D5D;
+  font-weight: normal;
+}
+ul.actions {
+  list-style: none;
+  padding: 0;
+}
+ul.subnav {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  width: 195px;
+}
+ul.subnav a:active,
+ul.subnav a:focus,
+ul.subnav a:hover {
+  color: white;
+  background-color: #3162A8;
+  text-decoration: none;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+ul.subnav li.parent {
+  padding: 10px 0 0 15px;
+  background: #F7F7F7 url('../images/ishamba/arrow.png') no-repeat 163px 15px;
+}
+ul.subnav li.parent,
+ul.subnav li a {
+  display: block;
+  padding: 10px 15px;
+  background-color: #F7F7F7;
+  color: black;
+  border-bottom: 1px solid white;
+}
+ul.subnav li.parent a {
+  border-left: 15px solid white;
+  margin-left: -15px;
+  color: #5D5D5D;
+}
+ul.subnav li.parent a:active,
+ul.subnav li.parent a:focus,
+ul.subnav li.parent a:hover {
+  color: white;
+}
+ul.subnav li.parent ul {
+  margin: 0;
+  padding: 0;
+}
+ul.subnav li.parent ul li:first-child a {
+  border-top: 1px solid white;
+  margin-top: 10px;
+}

@@ -1,0 +1,4 @@
+{% with customer=record.customer %}
+<a href="{% url "customers:customer_detail" pk=customer.pk %}">
+<small>{{ customer.id }}</small></a>
+{% endwith %}

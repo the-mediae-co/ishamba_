@@ -1,0 +1,25 @@
+{% extends 'offers/offers_base.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static%}
+
+{% block title %}Verify offer{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='verify offer' url_name='offer_verify' %}
+{% endblock %}
+
+{% block page_title %}Verify offer{% endblock %}
+
+{% block page_content %}
+    <div class="card border-light">
+        <div class="card-header mod-verify-offer">
+            Enter the provided voucher code and the number of an existing customer to verify and consume a voucher code.
+        </div>
+        <div class="card-body">
+            {% if form %}
+                {% crispy form %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

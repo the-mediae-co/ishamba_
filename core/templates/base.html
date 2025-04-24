@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+{% load clients link_tags static %}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>
+        {% block title %}{% endblock %} | {% client_setting "name" %}
+    </title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}?version=5">
+    {% client_setting "logo" as logo %}
+    <link rel="shortcut icon" href="{% static logo %}" type="image/x-icon">
+    {% block extra_css %}{% endblock %}
+
+    {% comment %}
+        Core JS includes (for inclusion on all pages) to be specified here
+    {% endcomment %}
+    {# jQuery first, then Popper.js, then Bootstrap JS #}
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    {# <script type='text/javascript' src="https://code.jquery.com/jquery-migrate-3.4.0.js"></script> #}
+    <script src="https://kit.fontawesome.com/32bbca74e5.js" crossorigin="anonymous"></script>
+    {% block extra_head_js %}{% endblock %}
+</head>
+<body>
+    {% block messages %}
+        {% comment %}To supress messages on any page, override {% block messages %}{% endcomment %}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="alert {% if message.level %}alert-{{ message.level_tag }}{% endif %}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endblock %}
+    <header>
+        <div class="container">
+            {% block section_header %}
+                <h1>{% client_setting "name" %}</h1>
+            {% endblock %}
+
+            {% with app_name="" %}
+            {% block nav %}
+                {% comment %}
+                    It's a block so that (e.g. the call-centre) pages can override the
+                    nav entirely.
+                {% endcomment %}
+                <nav role="navigation" id="main-navigation">
+                    <ul>
+                        {% navmenu_entry text="Home" url_name="home" app_name="home" %}
+                        {% if user.is_authenticated %}
+                            {% if current_call_center %}
+                                {% navmenu_entry text="Call Centers: "|add:current_call_center.name url_name="call_centers_index" %}
+                                {% navmenu_entry text="Tasks" url_name="task_list" app_name="tasks" %}
+                                {% navmenu_entry text="Customers" url_name="customers:customer_list" app_name="customers" %}
+                                {% if perms.payments.change_offer %}
+                                    {% navmenu_entry text="Offers" url_name="offer_list" app_name="offers" %}
+                                {% endif %}
+                                {% navmenu_entry text="Management" url_name="core_management" app_name="management" %}
+                                {% navmenu_entry text="Calls" url_name="calls_index" app_name="calls" %}
+                                {% navmenu_entry text="Surveys" url_name="interrogation:surveys_list" app_name="interrogation" %}
+                                {% navmenu_entry text="New Portal" url_name="new_ishamba" %}
+                            {% else %}
+                                {% navmenu_entry text="Call Centers" url_name="calls_index" %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% block extra_nav %}
+                        {% comment %}
+                            Extra nav items can be added within this block.
+                        {% endcomment %}
+                        {% endblock %}
+
+                        {% if user.is_authenticated %}
+                            {% navmenu_entry text="Log out "|add:user.first_name|default:user.username url_name="logout" %}
+                        {% else %}
+                            {% navmenu_entry text="Log in" url_name="login" app_name="login" %}
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endblock %}
+            {% endwith %}
+        </div>
+        <a  class="logo" href="/">
+            <img src="{% static logo %}" width="68" height="73" />
+        </a>
+    </header>
+
+    <div class="container-fluid">
+        {% block breadcrumb_base %}
+            {% comment %}
+                It's a block so that (e.g. the call-centre) pages can override the
+                breadcrumb entirely.
+            {% endcomment %}
+            <ul class="breadcrumb">
+                {% breadcrumb_entry text='Home' url_name='home' %}
+                {% block breadcrumb %}
+                {% endblock %}
+            </ul>
+        {% endblock %}
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    {% block copyright %}
+        <div style="text-align:center;">
+            Copyright &copy;{% now "Y" %} iShamba<br>All Rights Reserved
+        </div>
+    {% endblock %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{{ customer }} Crop History {% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Crop history' url_name='customers:customer_crop_history_list' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %} {{ customer.name }}'s Crop history {% endblock %}
+
+{% block page_content %}
+    <a class="btn btn-primary mod-subscription"
+       href="{% url 'customers:customer_crop_history_create' customer.pk %}">
+        Add Crop
+    </a>
+    {% render_table table %}
+{% endblock %}

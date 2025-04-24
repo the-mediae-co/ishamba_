@@ -1,0 +1,7 @@
+{% with customer=record.customer %}
+{% if customer.location %}
+✅
+{% else %}
+—
+{% endif %}
+{% endwith %}

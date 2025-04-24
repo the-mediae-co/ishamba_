@@ -1,0 +1,48 @@
+{% extends "admin/import_export/import.html" %}
+{% load i18n admin_urls import_export_tags static %}
+
+{% block content_subtitle %}
+    {% if subtitle %}
+        <h2>{{ subtitle }}</h2>
+    {% endif %}
+    {% if not confirm_form %}
+        {% if model_name and model_name == "Customer"%}
+            <h3>Template: </h3><a href="{% static 'csv/Customer Upload Template.csv' %}">Customer Upload Template.csv</a>
+            <h3>{% trans 'IMPORTANT' %}</h3>
+            <ul>
+                <li>All customers in an import sheet must be from the same country. If you are importing for more than one
+                    country, use multiple sheets.</li>
+                <li>The columns 'border0', 'border1', 'border2', and 'border3' represent the administrative levels of a country,
+                    such as country (border0), county (border1), subcounty (border2) and ward (border3) for Kenya, or country
+                    (border0), region (border1), district (border2), ward (border3) for Uganda. Each country uses different
+                    names. These column headers can either be named as shown below (i.e. border0, border1, border2, border3),
+                    or use the names specific to the country of the customers being imported (e.g. country, county, subcounty,
+                    ward).</li>
+                <li>Sex can be either m or f (upper or lower case).</li>
+                <li>Phone must start with a + and include the country code. To import multiple phone numbers for a customer,
+                    include them all as a comma-separated list, inside quotes. E.g. "+254720123456,+254720123457,+254720123458".
+                    The customer's main number must be listed first.</li>
+                <li>Optional: Agricultural_region must match the name of one in the system. E.g. Western: Nyanza Region</li>
+                <li>Preferred_language must be a three-letter ISO 639-3 language code (e.g. eng or swa) as can be found here:
+                    <a target="_blank" href="https://iso639-3.sil.org/code_tables/639/data">https://iso639-3.sil.org/code_tables/639/data</a></li>
+                <li>Optional: Location is a GPS point (e.g. long,lat). If specified, it must be a valid GPS coordinate within
+                    the country and administrative borders specified. If a location is not specified but borders are, the
+                    location will be set to the centroid of the specified administrative borders area. Conversely, if the
+                    borders are not specified but the GPS location is, the borders will be set to match the GPS coordinate.
+                    <b><i>IT IS OK TO NOT INCLUDE THIS FIELD OR LEAVE IT BLANK.</i></b></li>
+                <li>Optional: Commodities and categories are comma separated lists of names (or id's) of commodities and
+                    categories already in the system. If importing more than one for a customer, surround them with quotes. E.g.
+                    "Maize,Beans"</li>
+            </ul>
+        {% elif model_name and model_name == "MarketSubscription"%}
+            <h3>Template: </h3><a href="{% static 'csv/MarketSubscription Upload Template.csv' %}">MarketSubscription Upload Template.csv</a>
+            <h3>{% trans 'IMPORTANT' %}</h3>
+            <ul>
+                <li>In this sheet, customers must be identified by their unique ID.</li>
+                <li>Market must be the name of a valid market.</li>
+                <li>Backup, if defined, must be a main market.</li>
+                <li>Commodity must be an existing commodity name in the system.</li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,3 @@
+{% with p=record.priority %}
+<span class="badge badge-{% if p == 'critical' %}danger{% elif p == 'high' %}warning{% elif p == 'medium' %}info{% elif p == 'low' %}secondary{% endif %}">{{ record.get_priority_display }}</span>
+{% endwith %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load link_tags static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/customer.css" %}">
+{% endblock %}
+
+{% block nav %}
+    {% with app_name='management' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Management' url_name='core_management' %}
+{% endblock %}
+
+{% block section_header %}
+    <h1>Management</h1>
+{% endblock %}
+
+{% block content %}
+    <div class='row'>
+        <div class='col-md-3'>
+           <div class="card sidenav">
+                <div class="mod-sidenav" id="accordion">
+                    {% submenu_entry text="Metrics" icon="chart-simple" url_name="core_management_metrics" %}
+                    {% submenu_entry text="NPS" icon="heart" url_name="core_management_nps" %}
+
+                    <div class="card sidenav-item shadow-sm">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <a data-toggle="collapse" data-parent="#accordion" class="sidenav-link" href="#childmenu">
+                                    <i class="fa-solid fa-chart-pie fa-beat-fade sidenav-icon"></i>
+                                    Charts
+                                </a>
+                            </div>
+                        </div>
+                        <div id="childmenu" class="collapse in">
+                            <ul class="list-group sidenav-ul">
+                                {% submenu_child text="Membership" icon="star" url_name="core_management_membership_rate" %}
+                                {% submenu_child text="Calls" icon="phone" url_name="core_management_call_rate" %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {% submenu_entry text="Bulk SMS" icon="envelope" url_name="core_management_customer_filter" %}
+
+                </div>
+            </div>
+        </div>
+        <div class='col-md-9'>
+            <h2>{% block page_title %}{% endblock %}</h2>
+            {% block page_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

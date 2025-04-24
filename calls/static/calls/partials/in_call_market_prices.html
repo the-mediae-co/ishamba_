@@ -1,0 +1,22 @@
+<div ng-repeat='(commodity_name, commodity_prices) in market_prices'>
+    <h2>{{ commodity_name }}</h2>
+    <table  class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Market</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat='market_price in commodity_prices'>
+                <td>{{ market_price.market }}</td>
+                <td>{{ market_price.date| date:'d MMM yy' }}</td>
+                <td>{{ market_price.price }}</td>
+                <td>{{ market_price.amount }} {{ market_price.unit }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

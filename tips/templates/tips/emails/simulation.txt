@@ -1,0 +1,6 @@
+Below are the counts for the number of SMSs that will be sent on each day
+in the next {{ forecast|length }} days, along with the total to be sent.
+{% for date, count in forecast %}
+{{ date|date:"D d M" }}: {{ count }}{% endfor %}
+=================
+Total: {{ total }}

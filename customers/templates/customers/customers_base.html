@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load link_tags static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/customer.css" %}">
+{% endblock %}
+
+{% block nav %}
+    {% with app_name='customers' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Customers' url_name='customers:customer_list' %}
+{% endblock %}
+
+{% block section_header %}
+    <h1>Customers</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class='col-md-3'>
+            {% block submenu %}{% endblock %}
+        </div>
+        <div class='col-md-9'>
+            <h2>{% block page_title %}{% endblock %}</h2>
+            {% block page_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

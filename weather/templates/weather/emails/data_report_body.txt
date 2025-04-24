@@ -1,0 +1,11 @@
+Have some weather.
+
+{% for point in points %}
+#################
+{{ point.label }}
+
+{{ point.message }}
+{% for day in point.data %}
+{% with conditions=day.json.conditions.0 %}{% if forloop.first %}{{ conditions.keys|join:"," }}
+{% endif %}{{ conditions.values|join:"," }}{% endwith %}{% endfor %}
+{% endfor %}

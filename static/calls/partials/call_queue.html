@@ -1,0 +1,39 @@
+<h2 ng-if="calls && calls.length > 0">Call queue: {{ calls.length }} call<span ng-hide='calls.length === 1'>s</span></h2>
+<h2 ng-if="!calls || calls.length === 0">Call queue: No Calls</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Commodities</th>
+          <th>Previous calls</th>
+          <th>Waiting time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat='call in calls'>
+            <td>{{ $index + 1 }}</td>
+            <td>
+                <div ng-if="call.customer.name">
+                    {{ call.customer.name }}
+                </div>
+                <div ng-if="!call.customer.name">
+                    Unknown customer name
+                </div>
+                {{ call.customer.id }}
+            </td>
+            <td>{{ call.customer.region }}</td>
+            <td><span ng-repeat="c in call.customer.commodities">{{c}}{{$last ? '' : ', '}}</span></td>
+            <td ng-if="!call.previous_calls_number">
+                New customer! Please collect their details like name, location and commodities.
+            </td>
+            <td ng-if="call.previous_calls_number">
+                {{ call.previous_calls_number }}
+            </td>
+            <td>
+              <timer start-time="call.since">{{ hours }}h&nbsp;{{ minutes }}m&nbsp;{{ seconds }}s</timer>
+            </td>
+        </tr>
+    </tbody>
+</table>

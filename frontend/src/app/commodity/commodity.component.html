@@ -1,0 +1,337 @@
+
+<div *ngIf="commodity" class="h-full w-full">
+    <div class="flex flex-col h-full w-full">
+
+        <div class="h-16 p-4 flex-none text-center">
+          <h2 class="text-3xl text-gray-950 dark:text-white font-semibold">{{ commodity.name}} {{commodity.season_length_days}}</h2>
+          <label class="inline-flex items-center cursor-pointer">
+                    <input (change)="toggleTips()" type="checkbox" [(ngModel)]="commodity.tips_enabled" class="sr-only peer">
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Tips {{commodity.tips_enabled?'Enabled':'Disabled'}}</span>
+                  </label>
+        </div>
+        <div class="h-16 p-4 flex-none">
+            <ul class="flex flex-row list-none flex-wrap flex-row">
+                <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                    <a class="text-xs font-bold uppercase p-3 shadow-lg rounded block leading-normal" (click)="toggleTabs(1)" [ngClass]="{'text-blue-600 bg-white': openTab !== 1, 'text-white bg-blue-600': openTab === 1}">
+                        Tips Schedule
+                    </a>
+                </li>
+                <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                    <a class="text-xs font-bold uppercase p-3 shadow-lg rounded block leading-normal" (click)="toggleTabs(2)" [ngClass]="{'text-blue-600 bg-white': openTab !== 2, 'text-white bg-blue-600': openTab === 2}">
+                        Customers & Seasons
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="grow max-h-full overflow-y-scroll w-full p-4">
+                <div class="flex-row">
+                    <label for="language" class="w-1/4 m-2 text-sm font-medium text-gray-900">Language</label>
+                    <select (change)="languageChanged()" [(ngModel)]="selected_language" id="language" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 w-1/4 p-2.5">
+                        <option *ngFor="let language of languages" value="{{language.value}}" selected="">{{language.label}}</option>
+                    </select>
+                  <button (click)="openTipsModal($event)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2.5 m-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+                      </svg>
+                  </button>
+                  </div>
+                <table [ngClass]="{'hidden': openTab !== 1, 'block': openTab === 1}" *ngIf="tips.length > 0" class="max-h-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                #
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Delay
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Text
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let tip of tips" (dblclick)="openTipUpdateModal(tip)" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">
+                                {{ tip.id }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ tip.delay_days }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ tip.current_translation?.text || 'Missing Translation' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div [ngClass]="{'hidden': openTab !== 2, 'block': openTab === 2}" class="w-full flex flex-row">
+                    <div class="flex">
+                        <div class="flex flex-col">
+                            <div *ngFor="let season of tip_seasons">
+                                <input (change)="selectionChanged($event, season)" type="checkbox" id="season-{{season.id}}" value="{{season.id}}">
+                                <label for="season-{{season.id}}"> {{season.start_date}} </label>
+                            </div>
+                            <!-- Modal toggle -->
+                            <button class="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="toggleModal()">
+                                Upload Seasons
+                            </button>
+                            <!-- Modal toggle -->
+                            <button class="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="openCustomersModal()">
+                                Add Customers
+                            </button>
+                        </div>
+
+
+                    </div>
+                    <div class="flex pl-4">
+
+                        <section>
+                            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-3">
+                                    <div class="w-full md:w-1/2">
+                                        <form class="flex items-center">
+                                            <label for="simple-search" class="sr-only">Search</label>
+                                            <div class="relative w-full">
+                                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <input type="text" id="simple-search"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                    placeholder="Search" required=""
+                                                    (keyup)="filterCustomers(filter.value)"
+                                                    #filter
+                                                    >
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                              <app-customer-table [customerFilters]="customerFilters"></app-customer-table>
+                              <app-paginator></app-paginator>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+        </div>
+    </div>
+  </div>
+<!-- Seasons modal -->
+<div *ngIf="showModal" id="seasons-modal" tabindex="-1" class="pt-2 z-50 w-full overflow-x-hidden fixed inset-0 outline-none focus:outline-none justify-center items-center flex">
+    <!-- <div class="relative p-4 w-full max-w-md max-h-200"> -->
+        <!-- Modal content -->
+        <div class="flex flex-col">
+            <div class="flex-none h-20">
+                <!-- Modal header -->
+                <div class="items-center bg-white justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 flex flex-row">
+
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Create
+                    </h3>
+                    <div>
+                        <button (click)="toggleModal()" type="button" class="text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="flex-none h-40">
+                <!-- Modal body -->
+                <div>
+                    <div class="p-5 md:p-5 bg-white">
+                        <app-customer-file-uploader (errorEvent)="updateSeasonsError($event)" (newDataEvent)="updateSeasons($event)" [headers]="headers"></app-customer-file-uploader>
+                        <span [innerHTML]="errors.seasons" *ngIf="errors.seasons" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                        </span>
+
+                        <button (click)="saveTipSeasons()" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            Save
+                        </button>
+
+                    </div>
+                    <table *ngIf="seasonsData.length > 0" class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" style="height: 100vh; overflow-y: scroll;">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    border1
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    border2
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    border3
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    planting_date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let season_item of seasonsData" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td  *ngFor="let data_field of season_item" class="px-6 py-4">
+                                    {{ data_field }}
+                                </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <!-- <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
+
+
+        </div> -->
+    <!-- </div> -->
+</div>
+<!-- Tip Update modal -->
+<div *ngIf="selectedTip" id="tip-modal" tabindex="-1" class="pt-2 z-50 w-full overflow-x-hidden fixed inset-0 outline-none focus:outline-none justify-center items-center flex">
+    <!-- <div class="relative p-4 w-full max-w-md max-h-200"> -->
+        <!-- Modal content -->
+        <div class="flex flex-col">
+            <div class="flex-none h-20">
+                <!-- Modal header -->
+                <div class="items-center bg-white justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 flex flex-row">
+
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Update
+                    </h3>
+                    <div>
+                        <button (click)="closeTipUpdateModal()" type="button" class="text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="tip-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="flex-none h-40">
+                <!-- Modal body -->
+                <div>
+                    <div class="p-5 md:p-5 bg-white">
+                        <div class="col-span-2">
+                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Text</label>
+                            <textarea (blur)="saveUpdatedTip()" [(ngModel)]="selectedTip.translations[0].text" id="text" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write message text here" required></textarea>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delay</label>
+                            <input (blur)="saveUpdatedTip()" class="justify-end" type="number" [(ngModel)]="selectedTip.delay_days">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 flex flex-row">
+
+
+        </div> -->
+    <!-- </div> -->
+</div>
+<!-- Customers modal -->
+<div *ngIf="showCustomersModal" id="crud-modal" tabindex="-1" class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Add Customers
+                </h3>
+                <button (click)="closeCustomersModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="p-4 md:p-5">
+                <app-customer-file-uploader [label]="'Add Customers'" (errorEvent)="updateCustomersError($event)" (newDataEvent)="updateCustomers($event)" [headers]="['id']"></app-customer-file-uploader>
+                <span [innerHTML]="errors.customers" *ngIf="errors.customers" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                </span>
+                <button *ngIf="customersData.length > 0 && !errors.customers" (click)="saveCustomers()" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Add
+                </button>
+            </form>
+
+            <div class="flex flex-row items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <div *ngIf="customersData.length > 0" class="flex grow">
+                    <table class='text-center w-full'>
+                        <tr class='mb-4'>
+                            <th>id</th>
+                        </tr>
+                        <tbody class="bg-grey-light flex flex-col items-center justify-between overflow-y-scroll max-h-20">
+                            <tr *ngFor="let customer_item of customersData">
+                                <td>
+                                    {{ customer_item }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="showModal || selectedTip || showCustomersModal || showTipsModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+
+
+<!-- Tips modal -->
+<div *ngIf="showTipsModal" id="tips-modal" tabindex="-1" class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex">
+  <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow">
+          <!-- Modal header -->
+          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+              <h3 class="text-lg font-semibold text-gray-900">
+                  Upload tips for {{ commodity?.name }}
+              </h3>
+              <button (click)="closeTipsModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-toggle="crud-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+              </button>
+          </div>
+          <!-- Modal body -->
+          <form #heroForm="ngForm" class="p-4 md:p-5">
+              <div class="grid gap-4 mb-4 grid-cols-2">
+
+                  <div class="col-span-2 sm:col-span-1">
+                    <label for="tips_language" class="block mb-2 text-sm font-medium text-gray-900">Language</label>
+                    <select [(ngModel)]="selected_language" id="tips_language" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                        <option *ngFor="let language of languages" value="{{language.value}}" [selected]="language.value == selected_language">{{language.label}}</option>
+                    </select>
+                  </div>
+              </div>
+              <app-customer-file-uploader (errorEvent)="updateTipsError($event)" (newDataEvent)="updateNewTips($event)" [headers]="tipsHeaders"></app-customer-file-uploader>
+              <span [innerHTML]="errors.tips" *ngIf="errors.tips" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                </span>
+              <button *ngIf="!(errors| keyvalue)?.length && commodity && newTips.length > 0" (click)="uploadTips()" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  Save
+              </button>
+          </form>
+            <table *ngIf="newTips.length > 0" class='table-auto text-left'>
+                <tr class='flex w-full mb-4'>
+                    <th>Delay</th>
+                    <th>Text</th>
+                </tr>
+                <tbody class="bg-grey-light flex flex-col items-center justify-between overflow-y-scroll max-h-20">
+                    <tr *ngFor="let tip of newTips" class="mb-4">
+                        <td>{{tip.delay_days}}</td>
+                        <td>{{tip['translations'][0].text}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+{% extends 'tasks/tasks_base.html' %}
+
+{% load add_get crispy_forms_tags django_tables2 humanize link_tags static tasks_filters %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/customer.css" %}">
+{% endblock %}
+
+{% block title %}Task List{% endblock title %}
+
+{% block page_title %}
+    Task list
+    <a class="btn-sm btn-info" id="jump-to-last-page" href="{% add_get page=page_obj.paginator.num_pages %}" role="button">Jump to last page</a>
+{% endblock %}
+
+{% block page_content %}
+    <div id="tasks-filter">
+        <div class="card border-light">
+            <div class="card-header mod-collapsible collapsed" id="taskFilterToggle" data-toggle="collapse" data-target="#taskFilterCard" aria-expanded="false" aria-controls="#taskFilterCard">
+                <span class="card-title">Filter Tasks</span>
+                <span class="indicator"><i class="fa-solid fa-caret-right rotate-icon"></i></span>
+            </div>
+            <div id="taskFilterCard" class="collapse" data-parent="#tasks-filter">
+                <div class="card card-body">{% crispy view.form %}</div>
+            </div>
+        </div>
+    </div>
+    <div id="tasks-list">
+        <form method="post">
+            {% render_table table "tasks/partials/table.html" %}
+            <div id="selected-items-div">
+                <span id="selected-tasks-count">
+                    Task{{ selected_tasks_count|pluralize }} Selected: {{ selected_tasks_count|intcomma }}
+                </span>
+                <button type="button" class="btn-sm btn-info" id="reset-selections" onclick="clearSelections(this);">Clear Selections</button>
+                <button type="button" class="btn-sm btn-info" id="select-all-tasks" onclick="selectAllTasks(this);">Select All Filtered Tasks</button>
+            </div>
+            <h3>Actions</h3>
+            <div id="tasks-bulk-update">
+                <div class="card border-light">
+                    <div class="card-header mod-collapsible">
+                        <div id="bulkUpdateToggle" data-toggle="collapse" data-target="#bulkUpdateCard">
+                            <span class="card-title">Bulk update selected tasks</span>
+                            <span class="fa-solid fa-caret-right rotate-icon float-right"></span>
+                        </div>
+                    </div>
+                    <div id="bulkUpdateCard" class="collapse">
+                        <div class="card-body">{% crispy bulk_update_form %}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tasks-bulk-sms">
+                <div class="card border-light">
+                    <div class="card-header mod-collapsible">
+                        <div id="bulkSmsToggle" data-toggle="collapse" data-target="#bulkSmsCard">
+                            <span class="card-title">Send Bulk SMS to customers of selected tasks</span>
+                            <span class="fa-solid fa-caret-right rotate-icon float-right"></span>
+                        </div>
+                    </div>
+                    <div id="bulkSmsCard" class="card-collapse collapse">
+                        <div class="card-body">
+                            <div id="div_id_bulk-status" class="form-group float-left">
+                                <div id="div_id_bulk_close_tasks" class="checkbox">
+                                    <label for="div_id_bulk_close_tasks" class="">
+                                        <input type="checkbox" name="bulk_close_tasks" class="checkboxinput" id="id_bulk_close_tasks">
+                                        Mark these tasks Closed:Resolved after SMS is sent.
+                                    </label>
+                                </div>
+                                <button type="submit" id="submit-id-bulk-sms" name="bulk-sms" value="bulk-sms" class="btn btn-primary">
+                                    Compose Bulk SMS to selected customers
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% if perms.tasks.export %}
+            <form method="post" id="tasks-export" >
+                {% csrf_token %}
+                <div class="card border-light">
+                    <div class="card-header mod-collapsible">
+                        <div id="export-records-toggle" data-toggle="collapse" data-target="#exportRecordsCard">
+                            <span class="card-title" id="export-title">Export selected records</span>
+                            <span class="fa-solid fa-caret-right rotate-icon float-right"></span>
+                        </div>
+                    </div>
+                    <div id="exportRecordsCard" class="collapse">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5>Include fields:</h5>
+                                </div>
+                                <div class="col-4">
+                                    <h5>Export details:</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <ul>
+                                        {% for field in export_fields %}
+                                            <li>
+                                                <input type="checkbox" id="export-{{ field.key }}" name="{{ field.key }}" checked>
+                                                <label for="export-{{ field.key }}">{{ field.title }}</label>
+                                            </li>
+                                            {% if forloop.last %}
+                                                </ul>
+                                            {% elif forloop.counter|divisibleby:6 %}
+                                                </ul></div><div class="col-4"><ul>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-4 d-flex flex-column">
+                                    <label for="export-format">Format:</label>
+                                    <select name="export-format" id="export-format" class="custom-select">
+                                        {% for format in view.export_formats %}
+                                            <option value="{{ format }}">{{ format }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="export-success-toast" class="mt-auto ml-auto">Status:</small>
+                                    <button type="button" id="export-button" name="export-tasks"
+                                            class="btn btn-primary mt-auto ml-auto"
+                                            onclick="generateEmailReport(this)">
+                                        Email {{ record_count|intcomma }} filtered records
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ selected_tasks_count|json_script:"selected_tasks_count" }}
+    {{ selected_tasks|json_script:"selected_tasks" }}
+    {{ record_count|json_script:"record_count" }}
+    {{ paginator.per_page|json_script:"per_page" }}
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static "js/tasks.js" %}?version=9"></script>
+    <script src="{% static "js/filter-form.js" %}?version=9"></script>
+{% endblock %}

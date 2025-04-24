@@ -1,0 +1,28 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}Tip series{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Tip series' url_name='customers:customer_tip_subscription_list' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Tip series{% endblock %}
+
+{% block page_content %}
+    {% if can_add %}
+        <a class="btn btn-primary mod-subscription"
+           href="{% url 'customers:customer_tip_subscription_create' customer.pk %}">
+            Add
+          </a>
+    {% else %}
+        <button class="btn btn-primary mod-subscription" disabled="disabled">Add</button>
+        (Maximum number of tip series subscriptions has been reached)
+    {% endif %}
+
+    <a class="btn btn-secondary float-right" href="{% url 'customers:customer_tip_history' customer.pk %}">Tip history</a>
+
+    {% render_table table %}
+{% endblock %}

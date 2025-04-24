@@ -1,0 +1,11 @@
+{% load l10n %}
+<div id="div_{{ field.auto_id }}">
+<label for="{{ field.id_for_label }}" class="control-label {{ label_class }}">
+{% for choice in field.field.choices %}
+{% if choice.0 == field.value %}
+{{ choice.1|unlocalize }}
+{% endif %}
+{% endfor %}
+</label>
+<input type="hidden" name="{{ field.html_name }}"  value="{{ field.value }}" {{ field.flat_attrs|safe }} />
+</div>

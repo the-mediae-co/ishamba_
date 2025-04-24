@@ -1,0 +1,211 @@
+{% extends 'management/management_base.html' %}
+
+{% load static humanize outgoingsmstypes dict_value time_formatting %}
+
+{% block title %}NPS Metrics{% endblock title %}
+
+{% block page_content %}
+    <div class="card border-light">
+        <div class="card-header">
+            <i class="fa-solid fa-clipboard sidenav-icon"></i>NPS Details
+        </div>
+        <div class="card-body">
+            <div class="text-center">
+                <h1>Current NPS Score: {{ nps_score|floatformat:"1g" }}</h1>
+            </div>
+            <hr/>
+            <table class="table-bordered">
+                <caption>NPS Metrics</caption>
+                <tr>
+                    <td>Total NPS Response Count</td>
+                    <td>{{ nps_total_count|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Average NPS Response Rate</td>
+                    <td>{{ nps_total_response_rate|floatformat:"1g" }}%</td>
+                </tr>
+                <tr>
+                    <td>PV Recipient NPS Response Score</td>
+                    <td>
+                        {{ nps_pv_score|floatformat:"1g" }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Non-PV Recipient NPS Response Score</td>
+                    <td>
+                        {{ nps_non_pv_score|floatformat:"1g" }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <table class="table-bordered">
+                <caption>NPS Histogram (total)</caption>
+                <tr>
+                    <th><strong>Category</strong></th>
+                    <th><strong>Count</strong></th>
+                    <th><strong>Percent</strong></th>
+                </tr>
+                {% for label, count, pct in nps_total_histogram %}
+                    <tr>
+                        <td>{{ label }}</td>
+                        <td>{{ count|intcomma }}</td>
+                        <td>{{ pct|floatformat:"1g" }}%</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="container" style="width: 100%; padding-left: 1em; padding-right: 1em;">
+            {% csrf_token %}
+            <canvas id="nps-histogram-chart" data-url="{% url 'nps_histogram_chart' %}"></canvas>
+        </div>
+        <div class="card-body" id="selected-users">
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function addCustomerSelectionTable(data) {
+            let selectedUsersDiv = $('#selected-users');
+            let html = '<table class=\x22table-bordered\x22><caption>Selected Customers</caption>';
+            html += '<tr><th>ID</th><th>Name</th><th>Gender</th><th>Receives PV Weather</th><th>Country</th><th>County</th></tr>';
+            for (let row of data['selected_customers']) {
+                html += '<tr><td><a href="https://portal.ishamba.com/customers/customer/' + row["customer__id"] + '/">'+ row["customer__id"] + '</td>';
+                let name = row["customer__name"];
+                if (!name) {name = '&mdash;'}
+                html += '<td>' + name + '</td>';
+                let gender = "";
+                if (row["customer__sex"].toLowerCase() == 'm') {
+                    gender = 'Male'
+                }
+                else if (row["customer__sex"].toLowerCase() == 'f') {
+                    gender = 'Female'
+                }
+                html += '<td>' + gender + '</td>';
+                let receivesPVWeather = row['customer__border3'] != null;
+                if (receivesPVWeather) {
+                    html += '<td>Yes</td>';
+                }
+                else {
+                    html += '<td></td>';
+                }
+                html += '<td>' + row["customer__border0__name"] + '</td>';
+                if (row["customer__border1__name"] != null) {
+                    html += '<td>' + row["customer__border1__name"] + '</td></tr>';
+                }
+                else {
+                    html += '<td></td></tr>';
+                }
+            }
+            html += '</table>';
+            selectedUsersDiv.html(html);
+            console.log(data);
+        }
+        $(function () {
+            let canvas = $("#nps-histogram-chart");
+            $.ajax({
+                url: canvas.data("url"),
+                data: null,
+                success: function (data) {
+                    let ctx = canvas[0].getContext("2d");
+                    let chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.nps_chart_total_labels,
+                            datasets: [{
+                                label: 'Total (' + data.nps_chart_total_count + ')',
+                                borderColor: '#3a0ca3c0',
+                                backgroundColor: '#3a0ca380',
+                                borderWidth: 2,
+                                borderRadius: 3,
+                                data: data.nps_chart_total_pcts,
+                                counts: data.nps_chart_total_counts
+                            },{
+                                label: 'Last month(' + data.nps_chart_last_month_count + ')',
+                                borderColor: '#4361eec0',
+                                backgroundColor: '#4361ee80',
+                                borderWidth: 2,
+                                borderRadius: 3,
+                                data: data.nps_chart_last_month_pcts,
+                                counts: data.nps_chart_last_month_counts
+                            },{
+                                label: 'This month(' + data.nps_chart_this_month_count + ')',
+                                borderColor: '#4cc9f0c0',
+                                backgroundColor: '#4cc9f080',
+                                borderWidth: 2,
+                                borderRadius: 3,
+                                data: data.nps_chart_this_month_pcts,
+                                counts: data.nps_chart_this_month_counts
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'top',
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        // Include a percentage sign in the ticks
+                                        callback: function (value, index, ticks) {
+                                            return value + '%';
+                                        }
+                                    }
+                                }
+                            },
+                            onClick: event => {
+                                const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+                                if (points.length) {
+                                    const firstPoint = points[0];
+                                    const binLabel = chart.data.labels[firstPoint.index];
+                                    const binIndex = firstPoint.index;
+                                    const datasetIndex = firstPoint.datasetIndex;
+                                    const value = chart.data.datasets[datasetIndex].data[binIndex];
+                                    const label = chart.data.datasets[datasetIndex].label;
+                                    let csrf = $('input[name="csrfmiddlewaretoken"]').attr('value')
+                                    $.ajax({
+                                        url: canvas.data("url"),
+                                        data: {
+                                            'binLabel': binLabel,
+                                            'binIndex': binIndex,
+                                            'datasetIndex': datasetIndex,
+                                            'value': value,
+                                            'label': label
+                                        },
+                                        method: 'post',
+                                        headers: {'X-CSRFToken': csrf},
+                                        success: function (data) {
+                                            addCustomerSelectionTable(data);
+                                        }
+                                    });
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Histogram of Responses (%)"
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            let percentage = context.formattedValue || 0.0;
+                                            let datasetIndex = context.datasetIndex || 0;
+                                            let index = context.dataIndex || 0;
+                                            let dataArr = context.chart.data.datasets[datasetIndex].counts;
+                                            let count = context.chart.data.datasets[datasetIndex].counts[index];
+                                            {#let totalCount = context.chart.data.datasets[datasetIndex].counts[index];#}
+                                            let totalCount = 0;
+                                            dataArr.map(data => { totalCount += Number(data); });
+                                            return label + ": " + percentage + "% (" + count + "/" + totalCount + ")";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,9 @@
+<li class="list-group-item sidenav-child-link
+    {% if request.get_full_path == the_url %} is-active {% endif %}">
+    <a href="{{ the_url }}">
+    <div class="sidenav-child-link-item">
+        <i class="fa-solid fa-{{ icon }} fa-beat-fade sidenav-icon"></i>
+        <span>{{ text }}</span>
+    </div>
+    </a>
+</li>

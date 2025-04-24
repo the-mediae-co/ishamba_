@@ -1,0 +1,12 @@
+<p title="{{ action_object.text }}">
+    <i class="fa-solid fa-envelope sidenav-icon"></i> received
+    <strong>{{ action_object.sms_type }}</strong> sms.
+
+    <a data-toggle="collapse"
+       href="#sms-{{ action_object.id }}"
+       aria-expanded="false"
+       aria-controls="sms-{{ action_object.id }}">toggle sms</a>
+</p>
+<div id="sms-{{ action_object.id }}" class="collapse text-info">
+    <small>{{ action_object.text }}</small>
+</div>

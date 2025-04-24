@@ -1,0 +1,145 @@
+Max varchar without additional storage overhead is 126. We'll use 120.
+
+
+CREATE TABLE world_border (
+	id         SERIAL PRIMARY KEY,
+	country    varchar(120) NOT NULL,
+	level      smallint NOT NULL,
+	parent_id  integer,
+	name       varchar(120),
+	name_en    varchar(120) NOT NULL,
+	border   geography(MultiPolygon,4326) NOT NULL
+);
+
+
+INSERT INTO world_border (country, level, name, name_en, border)
+SELECT 'Kenya', 0, 'Kenya', 'Kenya', geog FROM ken0;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Kenya', 1, (select id from world_border b where initcap(b.name_en) = 'Kenya' and b.level = 0),
+	initcap(county), initcap(county), geog FROM ken1;
+
+UPDATE world_border SET name='Murang''a', name_en='Murang''a' WHERE name = 'Murang''A';
+UPDATE world_border SET name='Tharaka Nithi', name_en='Tharaka Nithi' WHERE name = 'Tharaka-Nithi';
+UPDATE world_border SET name='Elgeyo Marakwet', name_en='Elgeyo Marakwet' WHERE name = 'Elgeyo-Marakwet';
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Kenya', 2, (select id from world_border b where initcap(b.name_en) = initcap(ken2.county) and b.level = 1),
+	initcap(subcounty), initcap(subcounty), geog FROM ken2;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Kenya', 3, (select id from world_border bs where initcap(bs.name_en) = initcap(ken3.subcounty)
+	and bs.parent_id = (select id from world_border bc where initcap(bc.name_en) = initcap(ken3.county))),
+	initcap(ward), initcap(ward), geog FROM ken3;
+
+UPDATE world_border SET name = trim(regexp_replace(name, 'Sub-', 'Sub ', 'g')) WHERE name IS NOT NULL;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, 'Sub-', 'Sub ', 'g')) WHERE name_en IS NOT NULL;
+UPDATE world_border SET name = trim(regexp_replace(name, '\s+', ' ', 'g')) WHERE name IS NOT NULL;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, '\s+', ' ', 'g')) WHERE name_en IS NOT NULL;
+UPDATE world_border SET name = trim(regexp_replace(name_en, ' Sub County', '', 'g')) WHERE name IS NOT NULL AND level = 2;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, ' Sub County', '', 'g')) WHERE name_en IS NOT NULL AND level = 2;
+UPDATE world_border SET name = trim(regexp_replace(name_en, ' Ward', '', 'g')) WHERE name IS NOT NULL AND level = 3;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, ' Ward', '', 'g')) WHERE name_en IS NOT NULL AND level = 3;
+
+
+INSERT INTO world_border (country, level, name, name_en, border)
+SELECT 'Uganda', 0, 'Uganda', 'Uganda', geog FROM ug0;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Uganda', 1, (select id FROM world_border b WHERE initcap(b.name_en) = 'Uganda' AND b.level = 0),
+	initcap(adm1_en), initcap(adm1_en), geog FROM ug1;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Uganda', 2, (select id FROM world_border b WHERE b.country = 'Uganda' AND b.level = 1 AND initcap(b.name_en) = initcap(ug2.adm1_en)),
+	initcap(adm2_en), initcap(adm2_en), geog FROM ug2;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Uganda', 3, (select id FROM world_border ba WHERE ba.country = 'Uganda' AND ba.level = 2 AND initcap(ba.name_en) = initcap(ug3.adm2_en)
+	AND ba.parent_id = (select id from world_border bb WHERE bb.level = 1 AND initcap(bb.name_en) = initcap(ug3.adm1_en))),
+	initcap(adm3_en), initcap(adm3_en), geog FROM ug3;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Uganda', 4, (select id FROM world_border ba WHERE ba.country = 'Uganda' AND ba.level = 3 AND initcap(ba.name_en) = initcap(ug4.adm3_en)
+	AND ba.parent_id = (select id from world_border bb WHERE bb.level = 2 AND initcap(bb.name_en) = initcap(ug4.adm2_en))),
+	initcap(adm4_en), initcap(adm4_en), geog FROM ug4;
+
+--
+-- Zambia
+--
+
+INSERT INTO world_border (country, level, name, name_en, border)
+SELECT 'Zambia', 0, 'Zambia', 'Zambia', geog FROM zmb_admbnda_adm0_ecz_20230629_em;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Zambia', 1, (select id FROM world_border b WHERE initcap(b.name_en) = 'Zambia' AND b.level = 0),
+	initcap(adm1_en), initcap(adm1_en), geog FROM zmb_admbnda_adm1_ecz_20230629_em;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Zambia', 2, (select id FROM world_border b WHERE b.country = 'Zambia' AND b.level = 1 AND initcap(b.name_en) = initcap(zmb_admbnda_adm2_ecz_20230629_em.adm1_en)),
+	initcap(adm2_en), initcap(adm2_en), geog FROM zmb_admbnda_adm2_ecz_20230629_em;
+
+INSERT INTO world_border (country, level, parent_id, name, name_en, border)
+SELECT 'Zambia', 3, (select id FROM world_border ba WHERE ba.country = 'Zambia' AND ba.level = 2 AND initcap(ba.name_en) = initcap(zmb_admbnda_adm3_ecz_20230629_em.adm2_en)),
+        initcap(adm3_en), initcap(adm3_en), geog FROM zmb_admbnda_adm3_ecz_20230629_em;
+
+UPDATE world_border SET name = trim(regexp_replace(name, '\s+', ' ', 'g')) WHERE name IS NOT NULL;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, '\s+', ' ', 'g')) WHERE name_en IS NOT NULL;
+UPDATE world_border SET name = trim(regexp_replace(name_en, ' Municipality', '', 'g')) WHERE name IS NOT NULL AND level = 3;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, ' Municipality', '', 'g')) WHERE name_en IS NOT NULL AND level = 3;
+UPDATE world_border SET name = trim(regexp_replace(name_en, ' Division', '', 'g')) WHERE name IS NOT NULL AND (level = 4 OR level = 3);
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, ' Division', '', 'g')) WHERE name_en IS NOT NULL AND (level = 4 OR level = 3);
+UPDATE world_border SET name = trim(regexp_replace(name_en, ' Town Council', '', 'g')) WHERE name IS NOT NULL AND level = 4;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, ' Town Council', '', 'g')) WHERE name_en IS NOT NULL AND level = 4;
+
+UPDATE world_border SET name = trim(regexp_replace(name_en, 'Kcca', 'KCCA', 'g')) WHERE name IS NOT NULL;
+UPDATE world_border SET name_en = trim(regexp_replace(name_en, 'Kcca', 'KCCA', 'g')) WHERE name_en IS NOT NULL;
+
+CREATE INDEX ON world_border USING GIST (border);
+CREATE INDEX ON world_border (country);
+CREATE INDEX ON world_border (level);
+# CREATE INDEX ON world_border (parent_id);  # Django creates this index by default for foreign keys
+CREATE INDEX ON world_border (name_en);
+
+
+BorderLevelName
+CREATE TABLE world_borderlevelname (
+	id      SERIAL PRIMARY KEY,
+	iso     smallint,
+	iso2    char(2) NOT NULL,
+	iso3    char(3) NOT NULL,
+	level   smallint NOT NULL,
+	country varchar(120) NOT NULL,
+	name    varchar(120),
+	name_en varchar(120) NOT NULL
+);
+
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (404, 'KE', 'KEN', 0, 'Kenya', 'Country', 'Country');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (404, 'KE', 'KEN', 1, 'Kenya', 'County', 'County');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (404, 'KE', 'KEN', 2, 'Kenya', 'Subcounty', 'Subcounty');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (404, 'KE', 'KEN', 3, 'Kenya', 'Ward', 'Ward');
+
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'UG', 'UGA', 0, 'Uganda', 'Country', 'Country');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'UG', 'UGA', 1, 'Uganda', 'Region', 'Region');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'UG', 'UGA', 2, 'Uganda', 'District', 'District');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'UG', 'UGA', 3, 'Uganda', 'County', 'County');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'UG', 'UGA', 4, 'Uganda', 'Subcounty', 'Subcounty');
+
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'ZM', 'ZMB', 0, 'Zambia', 'Country', 'Country');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'ZM', 'ZMB', 1, 'Zambia', 'Province', 'Province');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'ZM', 'ZMB', 2, 'Zambia', 'District', 'District');
+INSERT INTO world_borderlevelname (iso, iso2, iso3, level, country, name_en, name) VALUES (800, 'ZM', 'ZMB', 3, 'Zambia', 'Constituency', 'Constituency');
+
+CREATE INDEX ON world_borderlevelname (iso);
+CREATE INDEX ON world_borderlevelname (iso2);
+CREATE INDEX ON world_borderlevelname (iso3);
+CREATE INDEX ON world_borderlevelname (country);
+
+
+*-*-*-*-*
+
+SELECT adm3_en, COUNT(gid) FROM ug4 GROUP BY adm3_en HAVING COUNT(gid) > 1 ORDER BY COUNT(gid);
+
+select id,parent_id,(select name as parent_name from world_border wb where wb.id = b.parent_id),country,level,name,name_en from world_border b where b.country = 'Uganda';
+
+pg_dump -Fc -v -Z 9 --data-only --no-owner --schema=public --no-privileges --dbname=world_borders -f borders.pg_dump
+pg_dump -Fp -v -Z 9 --data-only --no-owner --schema=public --no-privileges --dbname=world_borders -f borders.sql.gz

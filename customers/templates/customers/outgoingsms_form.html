@@ -1,0 +1,26 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags link_tags static %}
+
+{% block title %}Send {{ customer }} An Outgoing SMS{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='SMS History—Outgoing' url_name='customers:customer_outgoing_sms_history' pk=customer.pk %}
+    {% breadcrumb_entry text='Send new' url_name='customers:customer_send_outgoing_sms' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Send custom SMS{% endblock %}
+
+{% block page_content %}
+    {% if customer.has_requested_stop %}
+        <div class="alert alert-warning">
+            Note: this customer has requested for messages to stop.
+        </div>
+    {% endif %}
+    {% crispy form %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/sms-character-counter.js' %}?version=6"></script>
+{% endblock %}

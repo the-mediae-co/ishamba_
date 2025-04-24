@@ -1,0 +1,7 @@
+{% with record.url as url %}
+    {% if url %}
+        <a href="{{ url }}" title="download">
+            <i class="fa-solid fa-download-alt"></i>
+        </a>
+    {% endif %}
+{% endwith %}

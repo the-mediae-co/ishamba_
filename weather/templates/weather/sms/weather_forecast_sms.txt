@@ -1,0 +1,13 @@
+{% comment %}
+The output of this template is .strip()ped and then passed through re.sub() to
+remove repeated whitespace and replace matches with a single space. Thus
+indentation is safe, but you should take care not to introduce whitespace
+between e.g. a word and a comma.
+{% endcomment %}
+
+{% if have_data %}
+Weather: {{ min_min_temp|floatformat:"0" }}-{{ max_max_temp|floatformat:"0" }}C
+{{ rain_likely_string }}
+{% else %}
+Weather forecast not available.
+{% endif %}

@@ -1,0 +1,94 @@
+main .left {
+  float: left;
+  width: 70%;
+}
+main .right {
+  width: 20%;
+  float: left;
+  margin-left: 5%;
+  min-width: 230px;
+}
+@media only screen and (max-width: 985px) {
+  main .right {
+    margin-left: 0;
+  }
+}
+.nav-item.active a {
+    color: #2D6A9F;
+}
+.nav-item.active:hover,
+.nav-link.active:hover {
+    background-color: #E1EDF6;
+    color: #3071a9;
+}
+.nav-tabs a {
+    color: #fff;
+}
+.nav-tabs .nav-item,
+.nav-tabs .nav-link {
+    border-color: #6AA4D5;
+    border-bottom: white;
+}
+.nav-tabs .nav-item.active,
+.nav-tabs .nav-link.active {
+    background-color: #caf0f8;
+        /*background-color: #D0E2F2;*/
+    color: #2D6A9F;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.select {
+  margin-bottom: 0;
+}
+.switch {
+  margin-bottom: 15px;
+}
+.tab-content {
+    border: 1px solid #3D77D3;
+    padding: 0.5rem;
+    margin: 0;
+}
+.tab-content table {
+    margin-bottom: 0;
+}
+.tab-content .table th{
+    font-weight: 500;
+}
+.tabs {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.tabs a.button {
+  margin-right: 1px;
+  background-color: #F7F7F7;
+  color: black;
+}
+.tabs a.button:hover {
+  background-color: #3D77D3;
+  color: white;
+}
+.tabs li {
+  float: left;
+  list-style-type: none;
+}
+.tabs li.active a {
+  background-color: white;
+  color: #3D77D3;
+  border-top: 1px solid #3162A8;
+  border-left: 1px solid #3162A8;
+  border-right: 1px solid #3162A8;
+}
+.tabs ul {
+  margin: 0;
+  padding: 0;
+  *zoom: 1;
+}
+.tabs ul:after {
+  clear: both;
+}
+.tabs ul:after,
+.tabs ul:before {
+  display: table;
+  content: "";
+  line-height: 0;
+}

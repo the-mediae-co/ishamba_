@@ -1,0 +1,10 @@
+{% load static %}
+{{ country }}
+{% if country == 'Uganda' %}
+    <img src="{% static 'images/ishamba/Flag_of_Uganda.svg' %}" alt="Uganda Flag"
+         class="img-fluid img-thumbnail" width="50"><br>
+{% endif %}
+{% if country == 'Zambia' %}
+    <img src="{% static 'images/ishamba/Flag_of_Zambia.svg' %}" alt="Zambia Flag"
+         class="img-fluid img-thumbnail" width="50"><br>
+{% endif %}

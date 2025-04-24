@@ -1,0 +1,1 @@
+{%  load humanize %}{% if count is not None %}{{ count|intcomma }}{% else %}{{ form.count|intcomma }}{% endif %} Customer{{ count|pluralize }}

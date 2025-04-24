@@ -1,0 +1,17 @@
+<table class="table table-bordered">
+    <caption>50 Most Recent Outgoing SMS Messages</caption>
+    <thead>
+        <tr>
+            <th>Time Sent</th>
+            <th>Message Type</th>
+            <th>Text</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat='outgoing_sms in outgoing_sms_messages'>
+            <td>{{ outgoing_sms.time_sent| date:'dd/MM/yy HH:mm' }}</td>
+            <td><i class="fa-solid fa-{{ outgoing_sms.message_type_icon }} sidenav-icon"></i>{{ outgoing_sms.message_type_description }}</td>
+            <td>{{ outgoing_sms.text }}</td>
+        </tr>
+    </tbody>
+</table>

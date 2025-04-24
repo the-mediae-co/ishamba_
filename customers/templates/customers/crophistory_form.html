@@ -1,0 +1,36 @@
+{% extends 'customers/crophistory_list.html' %}
+
+{% load crispy_forms_tags link_tags django_tables2 static %}
+
+{% block title %}
+    {% if object %}
+        Edit a crop history item
+    {% else %}
+        Add a crop history item
+    {% endif %}
+{% endblock title %}
+
+{% block page_title %}
+    {% if object %}
+        Edit a crop history item
+    {% else %}
+        Add a crop history item
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% if object %}
+        {% breadcrumb_entry text='Edit' url_name='customers:customer_crop_history_update' pk=object.pk %}
+    {% else %}
+        {% breadcrumb_entry text='Add' url_name='customers:customer_crop_history_create' pk=customer.pk %}
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="crop-history-form">
+    {% crispy form %}
+    </div>
+{% endblock %}
+
+

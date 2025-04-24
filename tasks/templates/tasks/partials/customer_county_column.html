@@ -1,0 +1,7 @@
+{% with customer=record.customer %}
+{% if customer.border1 %}
+<small>{{ customer.border1 }}</small>
+{% else %}
+—
+{% endif %}
+{% endwith %}

@@ -1,0 +1,5 @@
+<form {% if form_action %}action="{{ form_action }}"{% endif %} {% if form_method %}method="{{ form_method }}"{% endif %} >
+    {% if form_method == "post" %}{% csrf_token %}{% endif %}
+    <input type="submit" name="submit" value="{{ button_title }}" {% if disable %}disabled{% endif %}
+           class="btn {% if disable %}btn-secondary{% else %}btn-primary{% endif %} btn-sm" id="id-{{ button_title }}-submit"/>
+</form>

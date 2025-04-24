@@ -1,0 +1,21 @@
+{% load action_tags %}
+
+<ul class="actions">
+    {% for action in actions %}
+        <li class="row">
+            <div class="col-xs-8">
+                {% render_action_description action %}
+            </div>
+            <div class="col-xs-4">
+                <p>
+                    {% render_timestamp action %}
+                </p>
+            </div>
+        </li>
+        <hr class="divider"></hr>
+    {% empty %}
+        <li>No actions</li>
+    {% endfor %}
+</ul>
+
+{% include 'partials/paginator.html' with page_obj=page_obj page_range=page_obj.page_range class=data %}

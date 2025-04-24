@@ -1,0 +1,15 @@
+<table class="table table-bordered">
+    <caption>50 Most Recent Incoming SMS Messages</caption>
+    <thead>
+        <tr>
+            <th>Time Received</th>
+            <th>Text</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat='incoming_sms in incoming_sms_messages'>
+            <td>{{ incoming_sms.created| date:'dd/MM/yy HH:mm' }}</td>
+            <td>{{ incoming_sms.text }}</td>
+        </tr>
+    </tbody>
+</table>

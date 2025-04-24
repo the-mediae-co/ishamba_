@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load link_tags %}
+
+{% block title %}Call Centre{% endblock title %}
+
+{% block nav %}
+    {% with app_name='calls' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Calls' url_name='calls_index' %}
+{% endblock %}
+
+{% block section_header %}
+    <h1>Call Centre</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="switch">
+        <a href="#/" class="btn btn-primary">Call queue</a>
+        <a href="#/call" class="btn btn-primary">In-call</a>
+    </div>
+{% endblock %}

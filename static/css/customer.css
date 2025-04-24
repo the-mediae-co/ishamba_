@@ -1,0 +1,118 @@
+.subscriptions-form .form-group .checkbox {
+  margin-top: 0;
+}
+/*stop the flow breaking between the label and the input */
+.control-group {
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+@media only screen and (min-width: 1000px) {
+  .customer-columns {
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+    -webkit-column-gap: 30px;
+    -moz-column-gap: 30px;
+    column-gap: 30px;
+  }
+}
+/** Removes default left padding in bootstrap's
+.col-*-* that causes fields to appear indented. */
+.customer-column-fields {
+  padding-left: 0;
+}
+fieldset {
+  margin-top: 30px;
+  padding: 0;
+  border: none;
+}
+fieldset legend {
+  padding: 10px 0;
+  font-size: 2rem;
+  border-bottom: 1px solid silver;
+}
+/* validation messages */
+.help-inline {
+  display: block;
+  margin-bottom: 15px;
+  margin-top: -15px;
+  color: #3162A8;
+}
+/* make sure the map has a bottom margin like the text fields so the help text isn't hidden */
+.leaflet-container {
+  margin-bottom: 30px;
+}
+/* revert styles for search in leaflet map */
+.leaflet-control-geocoder-expanded input,
+.leaflet-control-geocoder-error {
+  width: 226px;
+  margin: 0 0 0 4px;
+  padding: 0 0 0 4px;
+}
+.leaflet-control-geocoder-form input {
+  width: 0;
+  padding: 1px;
+  margin: 0;
+  font-weight: normal;
+}
+main .left {
+  width: 20%;
+  float: left;
+}
+main .right {
+  width: 50%;
+  float: left;
+  margin-left: 5%;
+}
+@media only screen and (max-width: 985px) {
+  main .right {
+    margin-left: 0;
+  }
+}
+main .right h3 {
+  margin-bottom: 10px;
+}
+main .right .notes {
+  margin-top: 0px;
+  color: #5D5D5D;
+}
+.market-subscriptions,
+.questions {
+  margin-bottom: 60px;
+}
+.market-subscriptions .alert,
+.questions .alert {
+  margin: 0;
+}
+.market-subscriptions .alert ul,
+.questions .alert ul {
+  margin: 0;
+  list-style: none;
+}
+.market-subscriptions .button,
+.questions .button {
+  float: right;
+  margin-top: 20px;
+}
+.market-subscriptions .delete-row,
+.questions .delete-row {
+  position: absolute;
+  top: 45px;
+  right: 20px;
+}
+.market-subscriptions .row,
+.questions .row {
+  position: relative;
+  margin-top: 0;
+  padding: 20px;
+  margin-left: 0;
+  margin-right: 0;
+}
+.market-subscriptions select,
+.questions select {
+  margin-bottom: 0px;
+}
+.questions .question {
+  margin-bottom: 15px;
+}

@@ -1,0 +1,7 @@
+{% spaceless %}
+    {% if include_and %}
+        {% if forloop.revcounter == 1 %}{% elif forloop.revcounter == 2 %} and {% else %}, {% endif %}
+    {% else %}
+        {% if forloop.last %}{% else %}, {% endif %}
+    {% endif %}
+{% endspaceless %}

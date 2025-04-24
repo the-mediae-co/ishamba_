@@ -1,0 +1,14 @@
+{% extends 'interrogation/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    {{ block.super }}
+    <div class="left">
+        <ul>
+            {% for survey in surveys_list %}
+            <li><a href="{% url 'interrogation:survey_detail' survey %}">{{survey}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

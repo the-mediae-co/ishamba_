@@ -1,0 +1,30 @@
+{% extends 'exports/exports_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load django_tables2 %}
+{% load link_tags %}
+{% load static %}
+
+{% block title %}Maps{% endblock %}
+
+{% block page_title %}Maps{% endblock %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Maps' url_name='exports:maps_list' %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="bottom-buffer">
+        <a class="btn btn-primary" href="{% url 'exports:maps_create' %}">
+            Add map
+        </a>
+    </div>
+
+    {# Exports table #}
+    <div class="card">
+        <div class="card-content">
+            {% render_table table %}
+        </div>
+    </div>
+{% endblock %}

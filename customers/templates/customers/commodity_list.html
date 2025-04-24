@@ -1,0 +1,20 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load crispy_forms_tags django_tables2 link_tags static %}
+
+{% block title %}{{ customer }} Commodities{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Commodities' url_name='customers:customer_commodity_list' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %} Commodities{% endblock %}
+
+{% block page_content %}
+    <a class="btn btn-primary mod-subscription"
+       href="{% url 'customers:customer_commodity_add' customer.pk %}">
+        Add
+    </a>
+    {% render_table table %}
+{% endblock %}

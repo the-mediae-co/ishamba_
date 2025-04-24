@@ -1,0 +1,16 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load django_tables2 link_tags static %}
+
+{% block title %}Tips history{% endblock title %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Tips history' url_name='customers:customer_tip_history' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Tips history{% endblock %}
+
+{% block page_content %}
+    {% render_table table %}
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'customers/customers_base.html' %}
+
+{% load crispy_forms_tags django_tables2 humanize static  %}
+
+{% block title %}Customers{% endblock title %}
+
+{% block page_title %}Customers{% endblock %}
+
+{% block content %}
+    <div id="customers-filter">
+        <div class="card border-light">
+            <div class="card-header mod-collapsible collapsed" id="customerFilterToggle" data-toggle="collapse" data-target="#customerFilterCard" aria-expanded="false" aria-controls="#customerFilterCard">
+                <span class="card-title">Filter Customers</span>
+                <span class="indicator"><i class="fa-solid fa-caret-right rotate-icon"></i></span>
+            </div>
+            <div id="customerFilterCard" class="collapse"  data-parent="#customers-filter">
+                <div class="card card-body">{% crispy view.form %}</div>
+            </div>
+        </div>
+    </div>
+    <div id="customers-list">
+        <form method="post"> {% csrf_token %}
+            {% render_table table "customers/partials/table.html" %}
+
+            <div id="selected-items-div">
+                <span id="selected-customers-count">
+                    Customer{{ selected_customers_count|pluralize }} Selected: {{ selected_customers_count|intcomma }}
+                </span>
+                <button type="button" class="btn-sm btn-info" id="reset-selections" onclick="clearSelections(this);">Clear Selections</button>
+                <button type="button" class="btn-sm btn-info" id="select-all-customers" onclick="selectAllCustomers(this);">Select All Filtered Customers</button>
+            </div>
+            <h1>Actions</h1>
+            <div id="bulk-sms">
+                <div class="card border-light">
+                    <div class="card-header mod-collapsible">
+                        <div id="bulkSmsToggle" data-toggle="collapse" data-target="#bulkSmsCard">
+                            <span class="card-title">Send Bulk SMS to selected customers</span>
+                            <i class="fa-solid fa-caret-right rotate-icon float-right"></i>
+                        </div>
+                    </div>
+                    <div id="bulkSmsCard" class="collapse">
+                        <div class="card-body">
+                            <div id="div_id_bulk-status" class="form-group float-left">
+                                <button type="submit" id="submit-id-bulk-sms" name="bulk-sms" value="bulk-sms" class="btn btn-primary">
+                                    Compose Bulk SMS to selected customers
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+            <form method="post" id="customer-export" >
+                {% csrf_token %}
+
+                <div class="card border-light">
+                    <div class="card-header mod-collapsible">
+                        <div id="export-records-toggle" data-toggle="collapse" data-target="#exportRecordsCard">
+                            <span class="card-title">Export selected records</span>
+                            <i class="fa-solid fa-caret-right rotate-icon float-right"></i>
+                        </div>
+                    </div>
+                    <div id="exportRecordsCard" class="collapse">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5>Include fields:</h5>
+                                </div>
+                                <div class="col-4">
+                                    <h5>Export details:</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <ul>
+                                        {% for field in export_fields %}
+                                            <li>
+                                                <input type="checkbox" id="export-{{ field.key }}" name="{{ field.key }}" checked>
+                                                <label for="export-{{ field.key }}">{{ field.title }}</label>
+                                            </li>
+                                            {% if forloop.last %}
+                                                </ul>
+                                            {% elif forloop.counter|divisibleby:6 %}
+                                                </ul></div><div class="col-4"><ul>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-4 d-flex flex-column">
+                                    <label for="export-format">Format:</label>
+                                    <select name="export-format" id="export-format" class="custom-select">
+                                        {% for format in view.export_formats %}
+                                            <option value="{{ format }}">{{ format }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="export-success-toast" class="mt-auto ml-auto">Status:</small>
+                                    <button type="button" id="export-button" name="export-customers"
+                                            class="btn btn-primary mt-auto ml-auto"
+                                            onclick="generateEmailReport(this)">
+                                        Email {{ record_count|intcomma }} filtered records
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ selected_customers_count|json_script:"selected_customers_count" }}
+    {{ selected_customers|json_script:"selected_customers" }}
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static "js/customers.js" %}?version=9"></script>
+    <script src="{% static "js/filter-form.js" %}?version=9"></script>
+{% endblock %}

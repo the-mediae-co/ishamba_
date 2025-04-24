@@ -1,0 +1,14 @@
+{% extends 'customers/customer_detail.html' %}
+
+{% load link_tags django_tables2 %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text='Activities' url_name='customers:customer_activity_stream' pk=customer.pk %}
+{% endblock %}
+
+{% block page_title %}Activity stream{% endblock %}
+
+{% block page_content %}
+    {% include 'partials/actions.html' %}
+{% endblock %}

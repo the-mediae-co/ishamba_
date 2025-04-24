@@ -1,0 +1,27 @@
+{% comment %}
+Three example outputs from this template:
+
+Prices from NAFIS (15 Dec).
+Millet 100kg: NAI 5000, MOM 4500.
+Carrots 500kg: NAI 1500, MOM 1250.
+Beans have no prices in the last 4 weeks.
+
+Prices from NAFIS/ISHAMBA (30 Jun).
+Millet 100kg: NAI 5000, MOM 4500.
+Carrots 500kg: NAI 1500, MOM 1250.
+
+Prices from NAFIS (5 Mar).
+Beans, Millet and Carrots have no prices in the last 4 weeks.
+{% endcomment %}
+{% load message_tags oneliner_tag %}
+{% oneliner %}
+Prices{% if sources %} from {{ sources|join:'/' }}{% endif %} via iShamba ({{ least_accurate_date|date:"d M" }}).
+{% endoneliner %}{% for commodity in commodities_with_prices %}{% oneliner %}
+ {{ commodity.short_name }}{% if commodity.common_quantity %} {{ commodity.common_quantity }}{% endif %}:
+{% for mp in commodity.prices %}
+ {{ mp.market.short_name }}{% if not commodity.common_quantity %} {{ mp.display_amount }}{% endif %} {{ mp.price }}{% if forloop.last %}. {% else %}, {% endif %}
+{% endfor %}
+{% endoneliner %}{% endfor %}{% oneliner %}{% if commodities_without_prices %}
+{{ commodities_without_prices|values_for:'short_name'|natural_join }} have no prices in the last {{ cutoff }} weeks.
+{% endif %}
+{% endoneliner %}

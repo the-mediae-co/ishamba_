@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load link_tags static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/customer.css" %}">
+{% endblock %}
+
+{% block section_header %}
+    <h1>Offers</h1>
+{% endblock %}
+
+{% block nav %}
+    {% with app_name='offers' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% breadcrumb_entry text='Offers' url_name='offer_list' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class='left'>
+        {% block submenu %}{% endblock %}
+    </div>
+    <div class='right'>
+        <h2>{% block page_title %}{% endblock %}</h2>
+        {% block page_content %}{% endblock %}
+    </div>
+{% endblock %}

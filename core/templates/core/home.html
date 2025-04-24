@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags static %}
+
+{% block title %}Home{% endblock title %}
+
+{% block nav %}
+    {% with app_name='home' %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block content %}
+    <h2>Welcome</h2>
+
+    {% if request.user.is_authenticated %}
+        <h4>Welcome {{ user }}</h4>
+        <a class="btn btn-primary" href="{% url "task_list" %}?assignees={{ user.pk }}">My tasks</a>
+        <a class="btn btn-primary" href="{% url "calls_index" %}">Call Center</a>
+        <a class="btn btn-primary" href="{% url "logout" %}">Log out</a>
+    {% else %}
+        <a href='{% url "login" %}'>Please log in</a>
+    {% endif %}
+
+{% endblock %}

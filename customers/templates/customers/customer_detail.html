@@ -1,0 +1,146 @@
+{% extends 'customers/customers_base.html' %}
+
+{% load django_tables2 link_tags static border_names %}
+
+{% block title %}{{ customer.id }} &mdash; {{  customer.name }} Details{% endblock title %}
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+{% endblock %}
+{% block extra_head_js %}
+    {{ block.super }}
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+{% endblock %}
+{% block breadcrumb %}
+    {{ block.super }}
+    {% breadcrumb_entry text=customer.pk url_name='customers:customer_detail' pk=customer.pk %}
+{% endblock %}
+
+{% block submenu %}
+<div class="card sidenav">
+    <div class="mod-sidenav" id="accordion" >
+        {% submenu_entry text="Market prices" icon="usd" url_name="customers:customer_market_subscription_list" pk=customer.pk %}
+        
+        {% submenu_entry text="Commodities" icon="cow" url_name="customers:customer_commodity_list" pk=customer.pk %}
+
+        {% submenu_entry text="Subscriptions" icon="user-tie" url_name="customers:customer_subscription_list" pk=customer.pk %}
+
+        {% submenu_entry text="Crop history" icon="leaf" url_name="customers:customer_crop_history_list" pk=customer.pk %}
+
+        {% submenu_entry text="Call history" icon="headphones-simple" url_name="customers:customer_call_history" pk=customer.pk %}
+
+        {% submenu_entry text="Activities" icon="hourglass" url_name="customers:customer_activity_stream" pk=customer.pk %}
+
+        <div class="card sidenav-item shadow-sm">
+            <div class="card-header">
+                <div class="card-title">
+                    <a data-toggle="collapse" data-parent="#accordion" class="sidenav-link" href="#childmenu">
+                        <i class="fa-solid fa-envelopes-bulk fa-beat-fade sidenav-icon"></i>
+                        SMS History
+                    </a>
+                </div>
+            </div>
+            <div id="childmenu" class="collapse in">
+                <ul class="list-group sidenav-ul">
+                    {% submenu_child text="Incoming"  icon="download" url_name="customers:customer_incoming_sms_history" pk=customer.pk %}
+                    {% submenu_child text="Outgoing" icon="upload" url_name="customers:customer_outgoing_sms_history" pk=customer.pk %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_title %}Customer: {{ object.pk }} &mdash; {{ object.name }}{% endblock %}
+
+{% block page_content %}
+
+    <dl class="customer-details">
+        <dt>Name:</dt><dd>{{ customer.name }}</dd>
+        <dt>Customer ID:</dt><dd>{{ customer.id }}</dd>
+        <dt>Sex:</dt>
+        {% if not customer.sex %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.sex }}</dd>
+        {% endif %}
+        <dt>{% border_names customer.border0 0 %}:</dt>
+        {% if not customer.border0 %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.border0 }}</dd>
+        {% endif %}
+        <dt>{% border_names customer.border0 1 %}:</dt>
+        {% if not customer.border1 %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.border1 }}</dd>
+        {% endif %}
+        <dt>{% border_names customer.border0 2 %}:</dt>
+        {% if not customer.border2 %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.border2 }}</dd>
+        {% endif %}
+        <dt>{% border_names customer.border0 3 %}:</dt>
+        {% if not customer.border3 %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.border3 }}</dd>
+        {% endif %}
+        <dt>Village:</dt>
+        {% if not customer.village %}
+            <dd class="text-danger">Unknown</dd>
+        {% else %}
+            <dd>{{ customer.village }}</dd>
+        {% endif %}
+        <dt>Agricultural region:</dt>
+        <dd>{{ customer.agricultural_region }}</dd>
+        <dt>Farms:</dt>
+        <dd>
+            {% if customer.commodities.count %}
+                {{ customer.commodities.all|join:", " }}:
+            {% endif %}
+            {% if customer.farm_size %}{{ customer.farm_size }} acres{% endif %}
+        </dd>
+        <dt>Preferred Language:</dt><dd>{{ customer.get_preferred_language_display }}</dd>
+
+        <dt>Should receive messages:</dt><dd>{{ customer.should_receive_messages|yesno|title }}</dd>
+        <dt>Can access call centre:</dt><dd>{{ customer.can_access_call_centre|yesno|title }}</dd>
+
+        {% if customer.phone_type %}
+           <dt>Phone type:</dt><dd>{{ customer.get_phone_type_display }}</dd>
+        {% endif %}
+
+        {% if customer.heard_from_us %}
+            <dt>Where the user heard about us:</dt><dd>{{ customer.heard_from_us }}</dd>
+        {% endif %}
+    </dl>
+
+    <div id="map" style="height: 360px;"></div>
+
+    <h3>Notes</h3>
+    <p class="notes">
+        {{ customer.notes|default:"(None)" }}
+    </p>
+
+    <a class="btn btn-primary" href="{% url 'customers:customer_update' pk=customer.pk %}">Edit</a>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type='text/javascript' id='leaflet_control_geocoder_script' src='https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js'></script>
+    {{ enableLeafletEditing|json_script:'enableLeafletEditing' }}
+    {{ customer.id|json_script:'customerId' }}
+    {{ customerGPS|json_script:'customerGPS' }}
+    {{ border2_label|json_script:'customerBorder2Label' }}
+    {{ border2_name|json_script:'customerBorder2Name' }}
+    {{ border2_geom|json_script:'customerBorder2Geometry' }}
+    {{ border2_centroid|json_script:'customerBorder2Centroid' }}
+    {{ border3_label|json_script:'customerBorder3Label' }}
+    {{ border3_name|json_script:'customerBorder3Name' }}
+    {{ border3_geom|json_script:'customerBorder3Geometry' }}
+    {{ border3_centroid|json_script:'customerBorder3Centroid' }}
+    <script type='text/javascript' src="{% static 'js/leaflet-controls.js' %}?version=5"></script>
+{% endblock %}
