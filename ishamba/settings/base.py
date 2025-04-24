@@ -17,7 +17,7 @@ DEBUG = config('DEBUG', False, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY')
 
-ADMINS = (('iShamba Dev', 'elizabeth@mediae.org'),)
+ADMINS = (('iShamba Dev'),)
 
 ORIGINAL_BACKEND = 'django.contrib.gis.db.backends.postgis'
 
@@ -215,8 +215,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Email settings
 # -----------------------------------------------------------------------------
 EMAIL_HOST = config("EMAIL_HOST")
-SERVER_EMAIL = "admin@portal.ishamba.com"
-DEFAULT_FROM_EMAIL = "admin@portal.ishamba.com"
+SERVER_EMAIL = ""
+DEFAULT_FROM_EMAIL = ""
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:

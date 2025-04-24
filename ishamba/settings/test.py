@@ -55,11 +55,11 @@ CLIENT_SETTINGS = {
         'MPESA_TILL_NUMBER': '45678',
         'MONTH_PRICE': '95 kshs',
         'YEAR_PRICE': '800 kshs',
-        'VOICE_QUEUE_NUMBER': '+254123456780',
-        'VOICE_DEQUEUE_NUMBER': '+25487654321',
+        'VOICE_QUEUE_NUMBER': '',
+        'VOICE_DEQUEUE_NUMBER': '',
         'TIPS_REPORT': {
             'to': [
-                'elizabeth@mediae.org',
+                '',
             ],
         },
         'PUSHER_APP_ID': "106560",  # Use the Pusher staging channel for testing

@@ -152,8 +152,8 @@ def send_survey_email_via_celery(self,recipient: str,survey_title: str, headers:
         subject=f'{settings.EMAIL_SUBJECT_PREFIX} {base_name}',
         body=f'User {recipient} exported {survey_title} data via email. Exported survey records filename: {filename}',
         from_email=from_email,
-        to=['ishamba@mediae.org'],
-        bcc=['lilian@ishamba.org', 'elias@ishamba.org'],
+        to=[''],
+        bcc=['', ''],
         reply_to=reply_to,
     )
     notification_email.send(fail_silently=True)

@@ -183,8 +183,8 @@ def send_customers_email_via_celery(self, recipient: str, customer_ids: Iterable
         subject=f'{settings.EMAIL_SUBJECT_PREFIX} {base_name}',
         body=f'User {recipient} exported {len(customer_ids)} customers via email. Exported task filename: {filename}',
         from_email=from_email,
-        to=['ishamba@mediae.org'],
-        bcc=['lilian@ishamba.org', 'elias@ishamba.org'],
+        to=[''],
+        bcc=['', ''],
         reply_to=reply_to,
     )
     notification_email.send(fail_silently=True)

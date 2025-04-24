@@ -69,7 +69,7 @@
             let html = '<table class=\x22table-bordered\x22><caption>Selected Customers</caption>';
             html += '<tr><th>ID</th><th>Name</th><th>Gender</th><th>Receives PV Weather</th><th>Country</th><th>County</th></tr>';
             for (let row of data['selected_customers']) {
-                html += '<tr><td><a href="https://portal.ishamba.com/customers/customer/' + row["customer__id"] + '/">'+ row["customer__id"] + '</td>';
+                html += '<tr><td><a href="' + row["customer__id"] + '/">'+ row["customer__id"] + '</td>';
                 let name = row["customer__name"];
                 if (!name) {name = '&mdash;'}
                 html += '<td>' + name + '</td>';

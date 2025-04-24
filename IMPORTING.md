@@ -84,4 +84,4 @@ This file contains the markets and backup markets (if required) for the customer
  5. Upload the market subscription file and make sure it is created as you expect (paying special attention to their assigned market subscriptions).
  6. Check for any errors arising from existing customers who already have market subscriptions. Copy these customers in a separate spreadsheet and remove them from the file you are going to upload.
  7. Verify that the customers have been created as you expect.
- 8. If you find any problems with the data in production _immediately_ notify [Elizabeth](elizabeth@mediae.org) Lilian or Elias.
+ 8. If you find any problems with the data in production _immediately_ notify [Elizabeth]() Lilian or Elias.

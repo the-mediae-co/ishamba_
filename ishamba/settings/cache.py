@@ -28,4 +28,4 @@ CACHES = {
 
 SELECT2_CACHE_BACKEND='select2'
 
-REDIS_MISC_URL = 'redis://ishamba.342miv.0001.euw1.cache.amazonaws.com:6379/2'
+REDIS_MISC_URL = ''
